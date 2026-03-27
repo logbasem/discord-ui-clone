@@ -1,6 +1,6 @@
 import React from 'react';
 
-import leoronne from '~/assets/img/avatar.jpg';
+import bazinga from '~/assets/img/thukuna.jpg';
 import cyhi from '~/assets/img/cyhi.jpg';
 import user1 from '~/assets/img/user1.jpg';
 import user2 from '~/assets/img/user2.jpg';
@@ -32,10 +32,11 @@ const UserList: React.FC = () => {
   return (
     <Container>
       <Role>Online - 4</Role>
-      <UserRow nickname="Leonardo Ronne" avatar={leoronne} />
-      <UserRow nickname="Luiky" avatar={user2} />
-      <UserRow nickname="Cyhi" isBot avatar={cyhi} />
-      <UserRow nickname="Rocket" isBot avatar={user5} />
+      <UserRow nickname="Bazingasdead" avatar={bazinga} />
+      <UserRow nickname="GoldDragon" avatar={user2} />
+      <UserRow nickname="Lilith" avatar={cyhi} />
+      <UserRow nickname="Log" avatar={user5} />
+      <UserRow nickname="thrishadugg" avatar={user4} />
 
       <Role>Offline - 17</Role>
       <UserRow nickname="Brock" avatar={user1} />
