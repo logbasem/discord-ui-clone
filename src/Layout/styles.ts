@@ -1,35 +1,44 @@
 import styled from 'styled-components';
 
-// SL - Server List
-// SN - Server Name
-// CI - Channel Info
-// CL - Channel List
-// CD - Channel Data
-// UI - User Info
-
 export const Grid = styled.div`
   display: grid;
   height: 100vh;
+  grid-template-rows: 46px 1fr 52px;
+  grid-auto-flow: column;
+  grid-auto-columns: 240px 1fr 240px;
+  gap: 2px;
+`;
 
-  grid-template-columns: auto;
-  grid-template-rows: 46px auto;
-  grid-template-areas:
-    'CI'
-    'CD';
+export const TopBar = styled.div`
+  grid-column: 1 / -1;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  background: #202020;
+`;
 
-  @media (min-width: 598px) {
-    grid-template-columns: 240px auto 240px;
-    grid-template-rows: 46px auto 52px;
-    grid-template-areas:
-      'SN CI CI'
-      'CL CD CD'
-      'UI CD CD';
+export const Sidebar = styled.div`
+  grid-row: 2;
+  overflow-y: auto;
+  background: pink;
+
+  /* Hide the second sidebar (right sidebar) on smaller screens */
+  &:last-child {
+    @media (max-width: 867px) {
+      display: none;
+    }
   }
+`;
 
-  @media (min-width: 868px) {
-    grid-template-areas:
-      'SN CI CI'
-      'CL CD UL'
-      'UI CD UL';
-  }
+export const Main = styled.div`
+  grid-row: 2;
+  min-width: 0;
+  overflow: auto;
+  background: blue;
+`;
+
+export const Footer = styled.div`
+  grid-column: 1 / -1;
+  grid-row: 3;
+  background: goldenrod;
 `;
