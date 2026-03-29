@@ -1,19 +1,30 @@
 import React from 'react';
 
-import { Grid } from './styles';
+import { Grid, Main, Sidebar, TopBar, Footer, MessageInputContainer } from './styles';
 
-import { ServerList, ChannelData, ChannelInfo, ChannelList, ServerName, UserInfo, UserList } from '../components';
+import { ChannelData, ChannelInfo, UserInfo, RightSidebar, LeftSidebar, MessageInput, Navigation } from '../components';
 
 const Layout: React.FC = () => {
+  const rightSidebarCollapsed = true;
   return (
     <Grid>
-      <ServerList />
-      <ServerName />
-      <ChannelInfo />
-      <ChannelList />
-      <UserInfo />
-      <ChannelData />
-      <UserList />
+      <TopBar>
+        <Navigation />
+      </TopBar>
+      <Sidebar>
+        <LeftSidebar />
+      </Sidebar>
+      <Main>
+        <ChannelInfo />
+        <ChannelData />
+      </Main>
+      {!rightSidebarCollapsed && <Sidebar><RightSidebar /></Sidebar>}
+      <MessageInputContainer>
+        <MessageInput />
+      </MessageInputContainer>
+      <Footer>
+        <UserInfo />
+      </Footer>
     </Grid>
   );
 };

@@ -8,7 +8,7 @@ import user5 from '~/assets/img/user5.jpg';
 
 import ChannelMessage, { Mention } from '../ChannelMessage';
 
-import { Container, Messages, InputWrapper, Input, InputIcon } from './styles';
+import { Container, Messages } from './styles';
 
 const ChannelData: React.FC = () => {
   const messagesRef = useRef() as React.MutableRefObject<HTMLDivElement>;
@@ -75,11 +75,6 @@ const ChannelData: React.FC = () => {
         />
         <ChannelMessage author="Rocket" date="21/06/2020" content={<>There are currently 4 online users and 17 offline!</>} isBot avatar={user5} />
       </Messages>
-
-      <InputWrapper>
-        <Input type="text" placeholder="Conversarem #chat-livre" />
-        <InputIcon />
-      </InputWrapper>
     </Container>
   );
 };
