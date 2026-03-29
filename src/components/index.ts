@@ -9,3 +9,4 @@ export { default as ChannelData } from './ChannelData';
 export { default as LeftSidebar } from './LeftSidebar';
 export { default as MessageInput } from './MessageInput';
 export { default as RightSidebar } from './RightSidebar';
+export { default as Navigation } from './NavigationBar';

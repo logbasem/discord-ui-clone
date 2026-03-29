@@ -2,13 +2,15 @@ import React from 'react';
 
 import { Grid, Main, Sidebar, TopBar, Footer, MessageInputContainer } from './styles';
 
-import { ChannelData, ChannelInfo, UserInfo, RightSidebar, LeftSidebar, MessageInput } from '../components';
+import { ChannelData, ChannelInfo, UserInfo, RightSidebar, LeftSidebar, MessageInput, Navigation } from '../components';
 
 const Layout: React.FC = () => {
   const rightSidebarCollapsed = true;
   return (
     <Grid>
-      <TopBar/>
+      <TopBar>
+        <Navigation />
+      </TopBar>
       <Sidebar>
         <LeftSidebar />
       </Sidebar>

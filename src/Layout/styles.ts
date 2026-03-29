@@ -12,7 +12,7 @@ export const Grid = styled.div`
 `;
 
 export const TopBar = styled.div`
-  grid-column: 1 / -1;
+  grid-column: 1 / 4;
   grid-row: 1;
   display: flex;
   align-items: center;
