@@ -1,12 +1,15 @@
 import styled from 'styled-components';
+import { AlternateEmail } from 'styled-icons/material';
 
 export const Grid = styled.div`
   display: grid;
   height: 100vh;
+  width: 100%;
   grid-template-rows: 46px 1fr 52px;
   grid-auto-flow: column;
   grid-auto-columns: 240px 1fr 240px;
-  gap: 2px;
+  gap: 0;
+  background-color: var(--primary);
 `;
 
 export const TopBar = styled.div`
@@ -14,13 +17,13 @@ export const TopBar = styled.div`
   grid-row: 1;
   display: flex;
   align-items: center;
-  background: #202020;
+  background-color: var(--primary);
 `;
 
 export const Sidebar = styled.div`
   grid-row: 2;
   overflow-y: auto;
-  background: pink;
+  background-color: var(--secondary);
 
   /* Hide the second sidebar (right sidebar) on smaller screens */
   &:last-child {
@@ -37,8 +40,19 @@ export const Main = styled.div`
   background: blue;
 `;
 
-export const Footer = styled.div`
-  grid-column: 1 / -1;
+export const MessageInputContainer = styled.div`
+  grid-column: 2;
   grid-row: 3;
-  background: goldenrod;
+  background-color: var(--secondary);
+  border-top: 1px solid var(--border-color);
+  justify-content: left;
+`;
+
+export const Footer = styled.div`
+  grid-column: 1;
+  grid-row: 3;
+  background-color: var(--quaternary);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;

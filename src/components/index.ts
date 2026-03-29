@@ -6,3 +6,6 @@ export { default as ChannelList } from './ChannelList';
 export { default as UserInfo } from './UserInfo';
 export { default as UserList } from './UserList';
 export { default as ChannelData } from './ChannelData';
+export { default as LeftSidebar } from './LeftSidebar';
+export { default as MessageInput } from './MessageInput';
+export { default as RightSidebar } from './RightSidebar';
