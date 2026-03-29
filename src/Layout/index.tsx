@@ -5,7 +5,7 @@ import { Grid, Main, Sidebar, TopBar, Footer, MessageInputContainer } from './st
 import { ChannelData, ChannelInfo, UserInfo, RightSidebar, LeftSidebar, MessageInput } from '../components';
 
 const Layout: React.FC = () => {
-  const rightSidebarCollapsed = false;
+  const rightSidebarCollapsed = true;
   return (
     <Grid>
       <TopBar/>

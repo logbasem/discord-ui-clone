@@ -3,7 +3,7 @@ import { AlternateEmail } from '@styled-icons/material';
 
 export const InputWrapper = styled.div`
   width: 100%;
-  padding: 2px 16px;
+  padding: 4px 16px;
   display: flex;
   align-items: center;
   position: relative;
