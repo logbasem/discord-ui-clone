@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { AlternateEmail } from 'styled-icons/material';
 
 export const Grid = styled.div`
   display: grid;
@@ -25,6 +24,16 @@ export const Sidebar = styled.div`
   overflow-y: auto;
   background-color: var(--secondary);
 
+  /* Left sidebar - row 2 only */
+  &:nth-of-type(2) {
+    grid-row: 2;
+  }
+  
+  /* Right sidebar - spans rows 2-3 */
+  &:nth-of-type(4) {
+    grid-row: 2 / 4;
+  }
+
   /* Hide the second sidebar (right sidebar) on smaller screens */
   &:last-child {
     @media (max-width: 867px) {
@@ -37,7 +46,6 @@ export const Main = styled.div`
   grid-row: 2;
   min-width: 0;
   overflow: auto;
-  background: blue;
 `;
 
 export const MessageInputContainer = styled.div`
