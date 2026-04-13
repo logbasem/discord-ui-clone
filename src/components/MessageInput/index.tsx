@@ -4,7 +4,7 @@ import { InputWrapper, Input, InputIcon } from './styles';
 const MessageInput: React.FC = () => {
   return (
     <InputWrapper>
-      <Input placeholder="Message #chat-livre" />
+      <Input placeholder="Message #chat" />
       <InputIcon />
     </InputWrapper>
   );
