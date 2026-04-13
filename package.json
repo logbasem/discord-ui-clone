@@ -62,9 +62,5 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "prettier": "^2.2.1",
     "react-app-rewired": "^2.1.6"
-  },
-  "overrides": {
-    "postcss": "7.0.39",
-    "postcss-safe-parser": "4.0.0"
   }
 }

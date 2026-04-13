@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { AlternateEmail } from '@styled-icons/material';
+import { AlternateEmail } from 'styled-icons/material';
 
 export const InputWrapper = styled.div`
   width: 100%;

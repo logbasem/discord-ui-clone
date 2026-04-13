@@ -14,14 +14,18 @@ import {
   ProfileStatusDot,
 } from './styles';
 
-const Navigation: React.FC = () => {
-  const [activeNav, setActiveNav] = useState<string>('channels');
+interface NavigationProps {
+  activeNav: string;
+  onChange: (id: string) => void;
+}
+
+const Navigation: React.FC<NavigationProps> = ({ activeNav, onChange }) => {
   const [hasNotifications, setHasNotifications] = useState(true);
 
   const navItems = [
     { id: 'channels', label: 'Channels' },
-    { id: 'discover', label: 'Discover' },
-    { id: 'friends', label: 'Friends' },
+    { id: 'private', label: 'Private Messages' },
+    { id: 'groups', label: 'Group Chats' },
   ];
 
   return (
@@ -44,7 +48,7 @@ const Navigation: React.FC = () => {
           <NavButton
             key={item.id}
             $active={activeNav === item.id}
-            onClick={() => setActiveNav(item.id)}
+            onClick={() => onChange(item.id)}
           >
             {item.label}
           </NavButton>
