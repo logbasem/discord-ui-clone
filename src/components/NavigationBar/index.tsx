@@ -23,7 +23,7 @@ const Navigation: React.FC<NavigationProps> = ({ activeNav, onChange }) => {
   const [hasNotifications, setHasNotifications] = useState(true);
 
   const navItems = [
-    { id: 'channels', label: 'Channels' },
+    { id: 'servers', label: 'Servers' },
     { id: 'private', label: 'Private Messages' },
     { id: 'groups', label: 'Group Chats' },
   ];
