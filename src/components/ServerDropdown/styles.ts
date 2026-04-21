@@ -2,8 +2,8 @@ import styled from 'styled-components';
 
 export const DropdownContainer = styled.div`
   position: absolute;
-  top: 46px; /* Height of the TopBar */
-  left: 0;
+  top: 100%;
+  left: 600px;
   background-color: var(--secondary);
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);

@@ -21,7 +21,7 @@ export const TopBar = styled.div`
   background-color: var(--primary);
   z-index: 10;
   overflow: visible;
-  position: absolute;
+  position: relative;
 `;
 
 export const Sidebar = styled.div<{ $collapsed?: boolean }>`
