@@ -10,6 +10,7 @@ export const Grid = styled.div<{ $leftCollapsed: boolean; $rightCollapsed: boole
   gap: 0;
   background-color: var(--primary);
   transition: grid-template-columns 0.25s ease;
+  overflow: visible;
 `;
 
 export const TopBar = styled.div`
@@ -19,6 +20,8 @@ export const TopBar = styled.div`
   align-items: center;
   background-color: var(--primary);
   z-index: 10;
+  overflow: visible;
+  position: absolute;
 `;
 
 export const Sidebar = styled.div<{ $collapsed?: boolean }>`
