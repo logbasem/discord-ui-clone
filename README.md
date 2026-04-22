@@ -32,11 +32,7 @@
 
 ## Project :star2:
 
-This project was part of an UI Clone challenge, the idea was to replicate (partially) the Discord's channels page using ReactJS, MUI and styled-components.
-
-The intent of this project was to work with more complex grid attributes of CSS.
-
-Deployed [here](https://discord.ui-clone.ronne.dev).
+This project is part of a UI Redesign Challenge through the University of Oklahoma's Course 4063 Human Computer Interaction. We are attempting to improve and make adjustments to the existing UI and design of Discord to better understand HCI design patterns and how they affect the user experience. Our main focuses are creating a more user friendly page grouping style, adding more freedom when it comes to server and chat modifications, and adding quality of life features such as a voice channel join confirmation and more obvious notification interface.
 
 <br>
 
