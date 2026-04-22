@@ -4,6 +4,13 @@ import { Grid, Main, Sidebar, RightSidebarWrapper, TopBar, Footer, MessageInputC
 import { ChannelData, ChannelInfo, UserInfo, RightSidebar, LeftSidebar, MessageInput, Navigation, ServerList, ServerDropdown } from '../components';
 import PrivateMessagesPage from '../pages/PrivateMessages';
 import GroupChatsPage from '../pages/GroupChats';
+import { ServerData } from '../components/ServerList';
+
+import RocketSeat from '~/assets/svg/RocketSeat.svg';
+import Code from '~/assets/svg/Code.svg';
+import NodeJS from '~/assets/svg/NodeJS.svg';
+import Pride from '~/assets/svg/Pride.svg';
+import Ronne from '~/assets/svg/Ronne.svg';
 
 // Chevron icon pointing left (for "collapse left sidebar")
 const ChevronLeft = () => (
@@ -25,12 +32,12 @@ const Layout: React.FC = () => {
   const [showServerDropdown, setShowServerDropdown] = useState<boolean>(false);
   const [showSeeAll, setShowSeeAll] = useState<boolean>(false);
 
-  const servers = [
-    { name: 'Ronne Dev Server', color: '#cc78a3' },
-    { name: 'ReactJS', color: '#00d8ff' },
-    { name: 'Node.js', color: '#83cd29' },
-    { name: 'CSS', color: '#2062af' },
-    { name: 'TypeScript', color: '#007bcd' },
+  const servers: ServerData[] = [
+    { name: 'Ronne Dev Server', logo: Ronne, color: '#cc78a3', hasNotifications: true, mentions: 40, isHome: true },
+    { name: 'LGBTQIA+ Pride', logo: Pride, color: '#fff', hasNotifications: true, mentions: 11 },
+    { name: 'RocketSeat', logo: RocketSeat, color: '#6633cc', hasNotifications: true, mentions: 40 },
+    { name: 'Code', logo: Code, color: '#A598BE', hasNotifications: true, mentions: 7 },
+    { name: 'Node.js', logo: NodeJS, color: '#83cd29', mentions: 32 },
   ];
 
   const recentServers = servers.slice(0, 3); // Show 3 most recent

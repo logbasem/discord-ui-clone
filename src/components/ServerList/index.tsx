@@ -16,7 +16,7 @@ import DC from '~/assets/svg/DC.svg';
 import CSS from '~/assets/svg/CSS.svg';
 import Ronne from '~/assets/svg/Ronne.svg';
 
-interface ServerData {
+export interface ServerData {
   name: string;
   logo: string;
   color: string;
