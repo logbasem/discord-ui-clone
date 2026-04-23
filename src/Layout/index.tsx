@@ -51,6 +51,7 @@ const Layout: React.FC = () => {
       setShowServerDropdown(false);
     } else {
       setSelectedServer(serverName);
+      setActiveNav('servers');
       setShowServerDropdown(false);
       setShowSeeAll(false);
     }
@@ -59,7 +60,6 @@ const Layout: React.FC = () => {
   const handleNavChange = (id: string) => {
     if (id === 'servers') {
       setShowServerDropdown(!showServerDropdown);
-      setActiveNav('servers');
     } else {
       setActiveNav(id);
       setShowServerDropdown(false);
@@ -80,6 +80,9 @@ const Layout: React.FC = () => {
         <ServerList
           onServerClick={(name) => {
             setSelectedServer(name);
+            if (activeNav !== 'servers') {
+              setActiveNav('servers');
+            }
             setShowSeeAll(false);
           }}
           selectedServer={selectedServer}
