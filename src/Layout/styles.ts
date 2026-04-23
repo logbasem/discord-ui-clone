@@ -86,7 +86,7 @@ export const CollapseButtonLeft = styled.button<{ $collapsed: boolean }>`
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   transition: left 0.25s ease, color 0.15s ease, background-color 0.15s ease;
 
   &:hover {
@@ -115,7 +115,7 @@ export const CollapseButtonRight = styled.button<{ $collapsed: boolean }>`
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   transition: right 0.25s ease, color 0.15s ease, background-color 0.15s ease;
 
   &:hover {
