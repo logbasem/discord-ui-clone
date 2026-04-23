@@ -74,7 +74,7 @@ export const Footer = styled.div<{ $leftCollapsed: boolean }>`
 export const CollapseButtonLeft = styled.button<{ $collapsed: boolean }>`
   position: fixed;
   left: ${({ $collapsed }) => ($collapsed ? '0px' : '240px')};
-  top: 50%;
+  top: 15%;
   transform: translateY(-50%);
   z-index: 100;
   width: 20px;
@@ -103,7 +103,7 @@ export const CollapseButtonLeft = styled.button<{ $collapsed: boolean }>`
 export const CollapseButtonRight = styled.button<{ $collapsed: boolean }>`
   position: fixed;
   right: ${({ $collapsed }) => ($collapsed ? '0px' : '240px')};
-  top: 50%;
+  top: 15%;
   transform: translateY(-50%);
   z-index: 100;
   width: 20px;
