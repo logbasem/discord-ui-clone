@@ -2,7 +2,7 @@ import React from 'react';
 
 import ServerButton from '../ServerButton';
 
-import { Container, Separator, ServerButtonWrapper } from './styles';
+import { Container, Separator, ServerButtonWrapper, FavoritesButton } from './styles';
 
 import RocketSeat from '~/assets/svg/RocketSeat.svg';
 import Pokemon from '~/assets/svg/Pokémon.svg';
@@ -16,7 +16,7 @@ import DC from '~/assets/svg/DC.svg';
 import CSS from '~/assets/svg/CSS.svg';
 import Ronne from '~/assets/svg/Ronne.svg';
 
-interface ServerData {
+export interface ServerData {
   name: string;
   logo: string;
   color: string;
@@ -28,10 +28,10 @@ interface ServerData {
 interface Props {
   onServerClick: (serverName: string) => void;
   selectedServer?: string | null;
-  mostRecentServer: string;
+  mostRecentServers: string[];
 }
 
-const ServerList: React.FC<Props> = ({ onServerClick, selectedServer, mostRecentServer }) => {
+const ServerList: React.FC<Props> = ({ onServerClick, selectedServer, mostRecentServers }) => {
   const allServersData: ServerData[] = [
     { name: 'Ronne Dev Server', logo: Ronne, color: '#cc78a3', hasNotifications: true, mentions: 40, isHome: true },
     { name: 'LGBTQIA+ Pride', logo: Pride, color: '#fff', hasNotifications: true, mentions: 11 },
@@ -46,29 +46,30 @@ const ServerList: React.FC<Props> = ({ onServerClick, selectedServer, mostRecent
     { name: 'Super Mario', logo: Mario, color: '#db5454', hasNotifications: true },
   ];
 
-  const mostRecentServerData = allServersData.find((s) => s.name === mostRecentServer);
-  const otherServers = allServersData.filter((s) => s.name !== mostRecentServer);
+  const mostRecentServerData = allServersData.filter((s) => mostRecentServers.includes(s.name));
+  const otherServers = allServersData.filter((s) => !mostRecentServers.includes(s.name));
 
   return (
     <Container>
-      {mostRecentServerData && (
-        <>
-          <ServerButtonWrapper>
-            <ServerButton
-              isHome={mostRecentServerData.isHome}
-              hasNotifications={mostRecentServerData.hasNotifications}
-              mentions={mostRecentServerData.mentions}
-              color={mostRecentServerData.color}
-              logo={mostRecentServerData.logo}
-              name={mostRecentServerData.name}
-              onClick={() => onServerClick(mostRecentServerData.name)}
-              selected={selectedServer === mostRecentServerData.name}
-            />
-          </ServerButtonWrapper>
+      <div style={{ fontWeight: 'bold', color: 'white', paddingBottom: '8px' }}>Favorites</div>
+      {mostRecentServerData.map((server) => (
+        <ServerButtonWrapper key={server.name}>
+          <ServerButton
+            isHome={server.isHome}
+            hasNotifications={server.hasNotifications}
+            mentions={server.mentions}
+            color={server.color}
+            logo={server.logo}
+            name={server.name}
+            onClick={() => onServerClick(server.name)}
+            selected={selectedServer === server.name}
+          />
+        </ServerButtonWrapper>
+      ))}
 
-          <Separator />
-        </>
-      )}
+      <FavoritesButton>Edit Favorites</FavoritesButton>
+
+      <Separator />
 
       {otherServers.map((server) => (
         <ServerButtonWrapper key={server.name}>

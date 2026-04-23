@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
-
+import React, { useEffect, useState } from 'react';
 import { Grid, Main, Sidebar, RightSidebarWrapper, TopBar, Footer, MessageInputContainer, CollapseButtonLeft,
   CollapseButtonRight } from './styles';
-
-import { ChannelData, ChannelInfo, UserInfo, RightSidebar, LeftSidebar, MessageInput, Navigation, ServerList } from '../components';
+import { ChannelData, ChannelInfo, UserInfo, RightSidebar, LeftSidebar, MessageInput, Navigation, ServerList, ServerDropdown } from '../components';
 import PrivateMessagesPage from '../pages/PrivateMessages';
 import GroupChatsPage from '../pages/GroupChats';
+import { ServerData } from '../components/ServerList';
+
+import RocketSeat from '~/assets/svg/RocketSeat.svg';
+import Code from '~/assets/svg/Code.svg';
+import NodeJS from '~/assets/svg/NodeJS.svg';
+import Pride from '~/assets/svg/Pride.svg';
+import Ronne from '~/assets/svg/Ronne.svg';
 
 // Chevron icon pointing left (for "collapse left sidebar")
 const ChevronLeft = () => (
@@ -23,52 +28,88 @@ const ChevronRight = () => (
 
 const Layout: React.FC = () => {
   const [activeNav, setActiveNav] = useState<string>('servers');
-  const [selectedServer, setSelectedServer] = useState<string | null>(null);
-  const [mostRecentServer, setMostRecentServer] = useState<string>('Ronne Dev Server');
+  const [selectedServer, setSelectedServer] = useState<string | null>('Ronne Dev Server');
+  const [showServerDropdown, setShowServerDropdown] = useState<boolean>(false);
+  const [showSeeAll, setShowSeeAll] = useState<boolean>(false);
+
+  const servers: ServerData[] = [
+    { name: 'Ronne Dev Server', logo: Ronne, color: '#cc78a3', hasNotifications: true, mentions: 40, isHome: true },
+    { name: 'LGBTQIA+ Pride', logo: Pride, color: '#fff', hasNotifications: true, mentions: 11 },
+    { name: 'RocketSeat', logo: RocketSeat, color: '#6633cc', hasNotifications: true, mentions: 40 },
+    { name: 'Code', logo: Code, color: '#A598BE', hasNotifications: true, mentions: 7 },
+    { name: 'Node.js', logo: NodeJS, color: '#83cd29', mentions: 32 },
+  ];
+
+  const recentServers = servers.slice(0, 5); // Show 3 most recent
+
   const [leftCollapsed, setLeftCollapsed] = useState(false);
   const [rightCollapsed, setRightCollapsed] = useState(false);
   
   const handleServerClick = (serverName: string) => {
-    setSelectedServer(serverName || null);
-    if (serverName) {
-      setMostRecentServer(serverName);
-    }
-  };
-  const handleNavChange = (id: string) => {
-    if (id === 'servers' && selectedServer) {
-      setSelectedServer(null);
+    if (serverName === 'See All') {
+      setShowSeeAll(true);
+      setShowServerDropdown(false);
     } else {
-      setActiveNav(id);
-      if (id !== 'servers') {
-        setSelectedServer(null);
-      }
+      setSelectedServer(serverName);
+      setActiveNav('servers');
+      setShowServerDropdown(false);
+      setShowSeeAll(false);
     }
   };
 
-  const renderPage = () => {
+  const handleNavChange = (id: string) => {
+    if (id === 'servers') {
+      setShowServerDropdown(!showServerDropdown);
+    } else {
+      setActiveNav(id);
+      setShowServerDropdown(false);
+      setShowSeeAll(false);
+    }
+  };
+
+  useEffect(() => {
+    console.log(`Server Dropdown is now ${showServerDropdown ? 'visible' : 'hidden'}`);
+  }, [showServerDropdown])
+
+  const renderMainContent = () => {
+    // If see-all is open, show server list
+    if (showSeeAll) {
+      return (
+        <ServerList
+          onServerClick={(name) => {
+            setSelectedServer(name);
+            if (activeNav !== 'servers') {
+              setActiveNav('servers');
+            }
+            setShowSeeAll(false);
+          }}
+          selectedServer={selectedServer}
+          mostRecentServers={recentServers.map((s) => s.name) || ''}
+        />
+      );
+    }
+
+    // Otherwise render based on activeNav
     switch (activeNav) {
       case 'private':
         return <PrivateMessagesPage />;
       case 'groups':
         return <GroupChatsPage />;
       case 'servers':
-        if (selectedServer) {
-          if (selectedServer === 'Ronne Dev Server') {
-            return (
-              <>
-                <ChannelInfo />
-                <ChannelData />
-              </>
-            );
-          }
+        if (selectedServer === 'Ronne Dev Server') {
           return (
-            <div style={{ padding: '20px' }}>
-              {'Channels for '}
-              {selectedServer}
-            </div>
+            <>
+              <ChannelInfo />
+              <ChannelData />
+            </>
           );
         }
-        return <ServerList onServerClick={handleServerClick} selectedServer={selectedServer} mostRecentServer={mostRecentServer} />;
+        return (
+          <div style={{ padding: '20px' }}>
+            Channels for 
+            {selectedServer}
+          </div>
+        );
       default:
         return (
           <>
@@ -83,6 +124,9 @@ const Layout: React.FC = () => {
     <Grid $leftCollapsed={leftCollapsed} $rightCollapsed={rightCollapsed}>
       <TopBar>
         <Navigation activeNav={activeNav} onChange={handleNavChange} />
+        {showServerDropdown && (
+          <ServerDropdown onServerClick={handleServerClick} mostRecentServers={recentServers} />
+        )}
       </TopBar>
 
       {/* Left sidebar */}
@@ -100,7 +144,7 @@ const Layout: React.FC = () => {
         <ChevronLeft />
       </CollapseButtonLeft>
 
-      <Main>{renderPage()}</Main>
+      <Main>{renderMainContent()}</Main>
 
       {/* Collapse toggle: right sidebar */}
       <CollapseButtonRight
