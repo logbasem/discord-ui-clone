@@ -71,8 +71,6 @@ const Layout: React.FC = () => {
     console.log(`Server Dropdown is now ${showServerDropdown ? 'visible' : 'hidden'}`);
   }, [showServerDropdown])
 
-  const rightSidebarCollapsed = true;
-
   const renderMainContent = () => {
     // If see-all is open, show server list
     if (showSeeAll) {
@@ -146,7 +144,7 @@ const Layout: React.FC = () => {
         <ChevronLeft />
       </CollapseButtonLeft>
 
-      <Main>{renderPage()}</Main>
+      <Main>{renderMainContent()}</Main>
 
       {/* Collapse toggle: right sidebar */}
       <CollapseButtonRight
