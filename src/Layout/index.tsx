@@ -83,7 +83,7 @@ const Layout: React.FC = () => {
             setShowSeeAll(false);
           }}
           selectedServer={selectedServer}
-          mostRecentServer={recentServers[0]?.name || ''}
+          mostRecentServers={recentServers.map((s) => s.name) || ''}
         />
       );
     }

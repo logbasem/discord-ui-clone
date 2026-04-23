@@ -28,6 +28,20 @@ export const ServerButtonWrapper = styled.div`
   box-sizing: border-box;
 `;
 
+export const FavoritesButton = styled.button`
+  padding: 8px 12px;
+  background-color: var(--tertiary);
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 8px;
+
+  &:hover {
+    background-color: var(--quinary);
+  }
+`;
+
 export const Separator = styled.div`
   width: 100%;
   height: 2px;
