@@ -8,7 +8,14 @@ export const DropdownContainer = styled.div`
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   z-index: 9999;
-  overflow: visible; /* Ensure dropdown content is not clipped */
+  overflow: visible;
+`;
+
+export const ServerDropdownItems = styled.div`
+  display: flex;
+  flex-direction: column;
+  max-height: calc(5 * 56px);
+  overflow-y: auto;
 `;
 
 export const DropdownItem = styled.div`

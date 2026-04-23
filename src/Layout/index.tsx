@@ -40,7 +40,7 @@ const Layout: React.FC = () => {
     { name: 'Node.js', logo: NodeJS, color: '#83cd29', mentions: 32 },
   ];
 
-  const recentServers = servers.slice(0, 3); // Show 3 most recent
+  const recentServers = servers.slice(0, 5); // Show 3 most recent
 
   const [leftCollapsed, setLeftCollapsed] = useState(false);
   const [rightCollapsed, setRightCollapsed] = useState(false);
