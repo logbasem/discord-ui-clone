@@ -3,11 +3,40 @@ import { LeftSidebarStyled } from './styles';
 import ServerName from '../ServerName';
 import ChannelList from '../ChannelList';
 
-const LeftSidebar: React.FC = () => {
+interface LeftSidebarProps {
+  activeNav: string;
+}
+
+const LeftSidebar: React.FC<LeftSidebarProps> = ({activeNav}) => {
+  const renderLeftSidebar = () => {
+    switch (activeNav) {
+      case 'servers':
+        return (
+          <>
+            <ServerName />
+            <ChannelList />
+          </>
+        );
+      case 'private':
+        return (
+          <>
+            <div>Private Messages stuff goes here</div>
+          </>
+        );
+      case 'groups':
+        return (
+          <>
+            <div>Group Chats stuff goes here</div>
+          </>
+        );
+      default:
+        return null;
+    }
+  }
+
   return (
     <LeftSidebarStyled>
-      <ServerName />
-      <ChannelList />
+      {renderLeftSidebar()}
     </LeftSidebarStyled>
   );
 };

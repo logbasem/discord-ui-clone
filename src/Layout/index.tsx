@@ -131,7 +131,7 @@ const Layout: React.FC = () => {
 
       {/* Left sidebar */}
       <Sidebar $collapsed={leftCollapsed}>
-        <LeftSidebar />
+        <LeftSidebar activeNav={activeNav} />
       </Sidebar>
 
       {/* Collapse toggle: left sidebar */}
