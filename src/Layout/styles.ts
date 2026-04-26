@@ -79,7 +79,6 @@ export const CollapseButtonLeft = styled.button<{ $collapsed: boolean }>`
   left: ${({ $collapsed }) => ($collapsed ? '0px' : '240px')};
   top: 15%;
   transform: translateY(-50%);
-  z-index: 100;
   width: 20px;
   height: 48px;
   border-radius: 0 6px 6px 0;
