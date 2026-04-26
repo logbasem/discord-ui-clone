@@ -100,6 +100,137 @@ export const NotificationBadge = styled.span`
   pointer-events: none;
 `;
 
+/* ── Notification Popup ── */
+export const NotificationPopup = styled.div`
+  position: absolute;
+  top: 52px;
+  left: 8px;
+  width: 640px;
+  max-height: 800px;
+  background-color: var(--secondary);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+`;
+
+export const NotificationPopupHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+`;
+
+export const NotificationPopupTitle = styled.h3`
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--white);
+`;
+
+export const NotificationPopupContent = styled.div`
+  padding: 8px 0;
+  max-height: 320px;
+  overflow-y: auto;
+`;
+
+export const NotificationItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+  }
+`;
+
+export const NotificationItemIcon = styled.div`
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  font-size: 14px;
+`;
+
+export const NotificationItemText = styled.div`
+  flex: 1;
+`;
+
+export const NotificationItemTitle = styled.p`
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--white);
+`;
+
+export const NotificationItemTime = styled.p`
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--gray);
+`;
+
+export const NotificationNewIndicator = styled.div`
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--notification);
+  flex-shrink: 0;
+`;
+
+export const NotificationItemAvatar = styled.img`
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+`;
+
+export const NotificationItemServerIcon = styled.div`
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  font-size: 14px;
+  font-weight: 600;
+`;
+
+export const NotificationItemServerImg = styled.img`
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+`;
+
+export const NotificationEmpty = styled.div`
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--gray);
+  font-size: 13px;
+`;
+
 /* ── Profile Button ── */
 export const ProfileButton = styled.button`
   position: relative;
