@@ -6,6 +6,8 @@ export const RightSidebarStyled = styled.div`
   width: 240px;
   background: #fafafa;
   overflow-y: auto;
+  position: relative;
+  z-index: 10;
   border-left: 1px solid #e0e0e0;
 
   /* Hide on tablet and below */

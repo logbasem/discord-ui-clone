@@ -6,7 +6,9 @@ export const LeftSidebarStyled = styled.div`
   width: 240px;
   background: #fafafa;
   overflow-y: auto;
+  position: relative;
   border-right: 1px solid #e0e0e0;
+  z-index: 10;
 
   /* Stack on mobile */
   @media (max-width: 597px) {

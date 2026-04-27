@@ -11,6 +11,10 @@ export interface Props {
   hasMention?: boolean;
   isBot?: boolean;
   avatar?: string;
+  reactions?: Array<{
+    emoji: string;
+    count: number;
+  }>; // TODO: implement reactions
 }
 
 const ChannelMessage: React.FC<Props> = ({ author, date, content, hasMention, isBot, avatar }) => {
