@@ -71,19 +71,19 @@ const PrivateMessagesPage: React.FC = () => {
       </Container>
       <PageContainer>
         <Messages ref={messagesRef}>
-          <ChannelMessage author="Cyhi" date="21/06/2020" content={<>Hiiiiiii!</>} avatar={cyhi} />
-          <ChannelMessage author="Leonardo Ronne" date="21/06/2020" content="hi, how r u?" avatar={leoronne} />
-          <ChannelMessage author="Cyhi" date="21/06/2020" content="I'm pretty good! I love private messages on Discord 2.0" avatar={cyhi} />
-          <ChannelMessage author="Leonardo Ronne" date="21/06/2020" content="what a coincidence I also love private messages on Discord 2.0" avatar={leoronne} />
-          <ChannelMessage author="Leonardo Ronne" date="21/06/2020" content="my favorite part is that the UI follows so many HCI principles" avatar={leoronne} />
-          <ChannelMessage author="Cyhi" date="21/06/2020" content="Omg YES I'm always saying this" avatar={cyhi} />
-          <ChannelMessage author="Cyhi" date="21/06/2020" content="I can't believe how intuitive and user-friendly the interface is" avatar={cyhi} />
-          <ChannelMessage author="Leonardo Ronne" date="21/06/2020" content="same here, it's like they really understand how users interact with messaging apps" avatar={leoronne} />
-          <ChannelMessage author="Cyhi" date="21/07/2020" content="Oh hey btw" avatar={cyhi} />
-          <ChannelMessage author="Cyhi" date="21/07/2020" content="What's your favorite color" avatar={cyhi} />
-          <ChannelMessage author="Leonardo Ronne" date="21/07/2020" content="blue" avatar={leoronne} />
-          <ChannelMessage author="Leonardo Ronne" date="21/07/2020" content="hbu" avatar={leoronne} />
-          <ChannelMessage author="Cyhi" date="21/07/2020" content="Probably green" avatar={cyhi} />
+          <ChannelMessage author="Cyhi" date="06/21/2026" content={<>Hiiiiiii!</>} avatar={cyhi} />
+          <ChannelMessage author="Leonardo Ronne" date="06/21/2026" content="hi, how r u?" avatar={leoronne} />
+          <ChannelMessage author="Cyhi" date="06/21/2026" content="I'm pretty good! I love private messages on Discord 2.0" avatar={cyhi} />
+          <ChannelMessage author="Leonardo Ronne" date="06/21/2026" content="what a coincidence I also love private messages on Discord 2.0" avatar={leoronne} />
+          <ChannelMessage author="Leonardo Ronne" date="06/21/2026" content="my favorite part is that the UI follows so many HCI principles" avatar={leoronne} />
+          <ChannelMessage author="Cyhi" date="06/21/2026" content="Omg YES I'm always saying this" avatar={cyhi} />
+          <ChannelMessage author="Cyhi" date="06/21/2026" content="I can't believe how intuitive and user-friendly the interface is" avatar={cyhi} />
+          <ChannelMessage author="Leonardo Ronne" date="06/21/2026" content="same here, it's like they really understand how users interact with messaging apps" avatar={leoronne} />
+          <ChannelMessage author="Cyhi" date="06/22/2026" content="Oh hey btw" avatar={cyhi} />
+          <ChannelMessage author="Cyhi" date="06/22/2026" content="What's your favorite color" avatar={cyhi} />
+          <ChannelMessage author="Leonardo Ronne" date="06/22/2026" content="blue" avatar={leoronne} />
+          <ChannelMessage author="Leonardo Ronne" date="06/22/2026" content="hbu" avatar={leoronne} />
+          <ChannelMessage author="Cyhi" date="06/22/2026" content="Probably green" avatar={cyhi} />
         </Messages>
       </PageContainer>
     </>
