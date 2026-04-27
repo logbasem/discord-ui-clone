@@ -12,3 +12,4 @@ export { default as RightSidebar } from './RightSidebar';
 export { default as Navigation } from './NavigationBar';
 export { default as ServerDropdown } from './ServerDropdown';
 export { default as PrivateChatList } from './PrivateChatList';
+export { default as Friends } from './FriendsButtons';

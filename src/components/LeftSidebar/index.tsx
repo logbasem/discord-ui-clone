@@ -3,6 +3,7 @@ import { LeftSidebarStyled } from './styles';
 import ServerName from '../ServerName';
 import ChannelList from '../ChannelList';
 import PrivateChatList from '../PrivateChatList';
+import Friends from '../FriendsButtons';
 
 interface LeftSidebarProps {
   activeNav: string;
@@ -21,7 +22,7 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({activeNav}) => {
       case 'private':
         return (
           <>
-            <div>Friends Component</div>
+            <Friends />
             <PrivateChatList />
           </>
         );
