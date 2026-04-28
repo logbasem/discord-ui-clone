@@ -9,7 +9,6 @@ import { UserProfileData } from '../data/userProfiles';
 import { ChatMessage } from '../components/ChannelData';
 import { Mention } from '../components/ChannelMessage';
 import leoronne from '~/assets/img/avatar.jpg';
-import cyhi from '~/assets/img/cyhi.jpg';
 import user2 from '~/assets/img/user2.jpg';
 import user4 from '~/assets/img/user4.jpg';
 import user5 from '~/assets/img/user5.jpg';

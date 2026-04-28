@@ -1,11 +1,7 @@
 // src/components/ChannelData/index.tsx
 import React, { useRef, useEffect } from 'react';
-import leoronne from '~/assets/img/avatar.jpg';
 import cyhi from '~/assets/img/cyhi.jpg';
-import user2 from '~/assets/img/user2.jpg';
-import user4 from '~/assets/img/user4.jpg';
-import user5 from '~/assets/img/user5.jpg';
-import ChannelMessage, { Mention } from '../ChannelMessage';
+import ChannelMessage from '../ChannelMessage';
 import { Container, Messages, EmptyChannel, EmptyChannelIcon, EmptyChannelText } from './styles';
 
 export interface ChatMessage {
