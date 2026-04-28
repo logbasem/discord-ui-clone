@@ -152,7 +152,7 @@ const Layout: React.FC = () => {
         <ChevronLeft />
       </CollapseButtonLeft>
 
-      <Main>{renderMainContent()}</Main>
+      <Main $hideScroll={activeNav === 'servers'}>{renderMainContent()}</Main>
 
       {/* Collapse toggle: right sidebar */}
       <CollapseButtonRight

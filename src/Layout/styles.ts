@@ -19,7 +19,7 @@ export const TopBar = styled.div`
   display: flex;
   align-items: center;
   background-color: var(--primary);
-  z-index: 10;
+  z-index: 100;
   overflow: visible;
   position: relative;
 `;
@@ -48,10 +48,10 @@ export const RightSidebarWrapper = styled.div<{ $width: number }>`
   }
 `;
 
-export const Main = styled.div`
+export const Main = styled.div<{ $hideScroll?: boolean }>`
   grid-row: 2;
   min-width: 0;
-  overflow-y: hidden;
+  overflow-y: ${({ $hideScroll }) => ($hideScroll ? 'hidden' : 'auto')};
 `;
 
 export const MessageInputContainer = styled.div`

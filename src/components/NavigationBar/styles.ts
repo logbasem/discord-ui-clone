@@ -241,7 +241,7 @@ export const ProfilePopup = styled.div`
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   overflow: hidden;
-  z-index: 9999;
+  z-index: 60;
   animation: fadeIn 0.2s ease;
 
   @keyframes fadeIn {
