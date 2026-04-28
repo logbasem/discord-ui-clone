@@ -6,12 +6,73 @@ import PrivateMessagesPage from '../pages/PrivateMessages';
 import GroupChatsPage from '../pages/GroupChats';
 import { ServerData } from '../components/ServerList';
 import { UserProfileData } from '../data/userProfiles';
+import { ChatMessage } from '../components/ChannelData';
+import { Mention } from '../components/ChannelMessage';
+import leoronne from '~/assets/img/avatar.jpg';
+import cyhi from '~/assets/img/cyhi.jpg';
+import user2 from '~/assets/img/user2.jpg';
+import user4 from '~/assets/img/user4.jpg';
+import user5 from '~/assets/img/user5.jpg';
 
 import RocketSeat from '~/assets/svg/RocketSeat.svg';
 import Code from '~/assets/svg/Code.svg';
 import NodeJS from '~/assets/svg/NodeJS.svg';
 import Pride from '~/assets/svg/Pride.svg';
 import Ronne from '~/assets/svg/Ronne.svg';
+
+const serverChatFeed: ChatMessage[] = [
+  { author: 'Leonardo Ronne', date: '06/21/2026', content: 'hi guys, how r u?', avatar: leoronne },
+  {
+    author: 'Luiky',
+    date: '06/21/2026',
+    content: (
+      <>
+        <Mention>@leoronne</Mention>
+        heyyyy
+      </>
+    ),
+    hasMention: true,
+    avatar: user2,
+  },
+  { author: 'Prynce', date: '06/21/2026', content: 'fine, tnx n u?' },
+  { author: 'Nyarth', date: '06/21/2026', content: 'heyy, whats up?' },
+  { author: 'John Doe', date: '06/21/2026', content: 'hey, what r u up 2?' },
+  { author: 'Maria Ciclano', date: '06/21/2026', content: 'whats gooooooood?!' },
+  { author: 'H. Montanha', date: '06/21/2026', content: "good, just coding some rocketseat's challenges" },
+  { author: 'Ronne12', date: '06/21/2026', content: 'good morning guys', avatar: user4 },
+  {
+    author: 'James',
+    date: '06/21/2026',
+    hasMention: true,
+    content: (
+      <>
+        <Mention>@leoronne</Mention>
+        heyy
+      </>
+    ),
+  },
+  { author: 'Enzo João', date: '06/21/2026', content: 'fine, tnx n u?' },
+  { author: 'Valentina de Jesus', date: '06/21/2026', content: 'whats gooooooood?!' },
+  { author: 'Enzo José', date: '06/21/2026', content: 'hey, what r u up 2?' },
+  { author: 'Valentina Maria', date: '06/21/2026', content: 'heyy, whats up?' },
+  {
+    author: 'Brunno Enzo',
+    date: '06/21/2026',
+    hasMention: true,
+    content: (
+      <>
+        <Mention>@leoronne</Mention>
+        {' '}
+        good, just coding some rocketseat&#39;s challenges
+      </>
+    ),
+  },
+  { author: 'Lara', date: '06/21/2026', content: 'fine, tnx n u?' },
+  { author: 'Lohaine', date: '06/21/2026', content: 'heyy, whats up?' },
+  { author: 'Lika', date: '06/21/2026', content: 'whats gooooooood?!' },
+  { author: 'Rocket', date: '06/21/2026', content: <>There are currently 4 online users and 17 offline!</>, isBot: true, avatar: user5 },
+];
+
 
 // Chevron icon pointing left (for "collapse left sidebar")
 const ChevronLeft = () => (
@@ -101,7 +162,7 @@ const Layout: React.FC = () => {
           return (
             <>
               <ChannelInfo channelName={selectedChannel} />
-              <ChannelData channelName={selectedChannel} />
+              <ChannelData channelName={selectedChannel} messages={serverChatFeed} />
             </>
           );
         }
@@ -115,7 +176,7 @@ const Layout: React.FC = () => {
         return (
           <>
             <ChannelInfo channelName={selectedChannel} />
-            <ChannelData channelName={selectedChannel} />
+            <ChannelData channelName={selectedChannel} messages={serverChatFeed} />
           </>
         );
     }
@@ -177,7 +238,7 @@ const Layout: React.FC = () => {
       </RightSidebarWrapper>
 
       <MessageInputContainer>
-        <MessageInput />
+        <MessageInput onSendMessage={(message: string) => { console.log(message); }} />
       </MessageInputContainer>
 
       <Footer $leftCollapsed={leftCollapsed}>
