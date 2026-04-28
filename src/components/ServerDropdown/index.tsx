@@ -1,5 +1,5 @@
 import React from 'react';
-import { DropdownContainer, SeeAllButton, ServerDropdownItems } from './styles';
+import { DropdownContainer, SeeAllButton, ServerDropdownItems, ButtonContainer, AddNewButton } from './styles';
 import { ServerData } from '../ServerList';
 import ServerButton from '../ServerButton/index';
 import { ServerButtonWrapper } from '../ServerList/styles';
@@ -28,7 +28,10 @@ const ServerDropdown: React.FC<ServerDropdownProps> = ({ onServerClick, mostRece
           </ServerButtonWrapper>
         ))}
       </ServerDropdownItems>
-      <SeeAllButton onClick={() => onServerClick('See All')}>See All</SeeAllButton>
+      <ButtonContainer>
+        <AddNewButton onClick={() => onServerClick('Add New')}>+ Add New</AddNewButton>
+        <SeeAllButton onClick={() => onServerClick('See All')}>See All</SeeAllButton>
+      </ButtonContainer>
     </DropdownContainer>
   );
 };

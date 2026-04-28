@@ -15,14 +15,13 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({activeNav}) => {
       case 'servers':
         return (
           <>
-            <ServerName />
+            <ServerName name="HCI Test Server" />
             <ChannelList />
           </>
         );
       case 'private':
         return (
           <>
-            <Friends />
             <PrivateChatList />
           </>
         );
@@ -39,6 +38,7 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({activeNav}) => {
 
   return (
     <LeftSidebarStyled>
+      <Friends />
       {renderLeftSidebar()}
     </LeftSidebarStyled>
   );

@@ -2,12 +2,14 @@ import React from 'react';
 
 import { Container, Title, ExpandIcon } from './styles';
 
-const ServerName: React.FC = () => {
+interface ServerNameProps {
+  name: string;
+}
+
+const ServerName: React.FC<ServerNameProps> = ({ name }) => {
   return (
     <Container>
-      <Title>Ronne Dev Server</Title>
-
-      <ExpandIcon />
+      <Title>{name}</Title>
     </Container>
   );
 };
