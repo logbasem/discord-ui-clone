@@ -1,27 +1,83 @@
 import React, { useRef, useEffect } from 'react';
-
 import leoronne from '~/assets/img/avatar.jpg';
 import cyhi from '~/assets/img/cyhi.jpg';
 import user2 from '~/assets/img/user2.jpg';
 import user4 from '~/assets/img/user4.jpg';
 import user5 from '~/assets/img/user5.jpg';
-
 import ChannelMessage, { Mention } from '../ChannelMessage';
-
 import { Container, Messages, EmptyChannel, EmptyChannelIcon, EmptyChannelText } from './styles';
 
 export interface Props {
   channelName?: string;
 }
 
-const ChannelData: React.FC<Props> = ({channelName}) => {
+interface ChatMessage {
+  author: string;
+  date: string;
+  content: React.ReactNode;
+  hasMention?: boolean;
+  isBot?: boolean;
+  avatar?: string;
+}
+
+const chatFeed: ChatMessage[] = [
+  { author: 'Leonardo Ronne', date: '06/21/2026', content: 'hi guys, how r u?', avatar: leoronne },
+  {
+    author: 'Luiky',
+    date: '06/21/2026',
+    content: (
+      <>
+        <Mention>@leoronne</Mention>
+        heyyyy
+      </>
+    ),
+    hasMention: true,
+    avatar: user2,
+  },
+  { author: 'Prynce', date: '06/21/2026', content: 'fine, tnx n u?' },
+  { author: 'Nyarth', date: '06/21/2026', content: 'heyy, whats up?' },
+  { author: 'John Doe', date: '06/21/2026', content: 'hey, what r u up 2?' },
+  { author: 'Maria Ciclano', date: '06/21/2026', content: 'whats gooooooood?!' },
+  { author: 'H. Montanha', date: '06/21/2026', content: "good, just coding some rocketseat's challenges" },
+  { author: 'Ronne12', date: '06/21/2026', content: 'good morning guys', avatar: user4 },
+  {
+    author: 'James',
+    date: '06/21/2026',
+    hasMention: true,
+    content: (
+      <>
+        <Mention>@leoronne</Mention>
+        heyy
+      </>
+    ),
+  },
+  { author: 'Enzo João', date: '06/21/2026', content: 'fine, tnx n u?' },
+  { author: 'Valentina de Jesus', date: '06/21/2026', content: 'whats gooooooood?!' },
+  { author: 'Enzo José', date: '06/21/2026', content: 'hey, what r u up 2?' },
+  { author: 'Valentina Maria', date: '06/21/2026', content: 'heyy, whats up?' },
+  {
+    author: 'Brunno Enzo',
+    date: '06/21/2026',
+    hasMention: true,
+    content: (
+      <>
+        <Mention>@leoronne</Mention>
+        {' '}
+        good, just coding some rocketseat&#39;s challenges
+      </>
+    ),
+  },
+  { author: 'Lara', date: '06/21/2026', content: 'fine, tnx n u?' },
+  { author: 'Lohaine', date: '06/21/2026', content: 'heyy, whats up?' },
+  { author: 'Lika', date: '06/21/2026', content: 'whats gooooooood?!' },
+  { author: 'Rocket', date: '06/21/2026', content: <>There are currently 4 online users and 17 offline!</>, isBot: true, avatar: user5 },
+];
+
+const ChannelData: React.FC<Props> = ({ channelName }) => {
   const messagesRef = useRef() as React.MutableRefObject<HTMLDivElement>;
-  const users = ['Prynce', 'Nyarth', 'John Doe', 'Maria Ciclano', 'H. Montanha', 'James', 'Enzo João', 'Valentina de Jesus', 'Enzo José', 'Valentina Maria', 'Brunno Enzo', 'Lara', 'Lohaine', 'Lika'];
-  const messages = ['fine, tnx n u?', 'heyy, whats up?', 'hey, what r u up 2?', 'whats gooooooood?!', "good, just coding some rocketseat's challenges"];
 
   useEffect(() => {
     const div = messagesRef.current;
-
     if (div) {
       div.scrollTop = div.scrollHeight;
     }
@@ -46,51 +102,18 @@ const ChannelData: React.FC<Props> = ({channelName}) => {
   return (
     <Container>
       <ChannelMessage author="Cyhi" date="06/21/2026" content={<>Welcome to the Open Chat channel!</>} hasMention isBot avatar={cyhi} />
-
       <Messages ref={messagesRef}>
-        <ChannelMessage author="Leonardo Ronne" date="06/21/2026" content="hi guys, how r u?" avatar={leoronne} />
-        <ChannelMessage
-          author="Luiky"
-          date="06/21/2026"
-          content={(
-            <>
-              <Mention>@leoronne</Mention>
-              heyyyy
-            </>
-          )}
-          hasMention
-          avatar={user2}
-        />
-        {Array.from(Array(5).keys()).map((n) => (
-          <ChannelMessage key={n} author={users[Math.floor(Math.random() * users.length)]} date="06/21/2026" content={messages[Math.floor(Math.random() * messages.length)]} />
+        {chatFeed.map((message) => (
+          <ChannelMessage
+            key={`${message.author}-${message.date}-${typeof message.content === 'string' ? message.content : 'mention'}`}
+            author={message.author}
+            date={message.date}
+            content={message.content}
+            hasMention={message.hasMention}
+            isBot={message.isBot}
+            avatar={message.avatar}
+          />
         ))}
-        <ChannelMessage author="Ronne12" date="06/21/2026" content="good morning guys" avatar={user4} />
-        <ChannelMessage
-          author={users[Math.floor(Math.random() * users.length)]}
-          date="06/21/2026"
-          hasMention
-          content={(
-            <>
-              <Mention>@leoronne</Mention> 
-              {messages[Math.floor(Math.random() * messages.length)]}
-            </>
-          )}
-        />
-        {Array.from(Array(5).keys()).map((n) => (
-          <ChannelMessage key={n} author={users[Math.floor(Math.random() * users.length)]} date="06/21/2026" content={messages[Math.floor(Math.random() * messages.length)]} />
-        ))}
-        <ChannelMessage
-          author={users[Math.floor(Math.random() * users.length)]}
-          date="06/21/2026"
-          hasMention
-          content={(
-            <>
-              <Mention>@leoronne</Mention> 
-              {messages[Math.floor(Math.random() * messages.length)]}
-            </>
-          )}
-        />
-        <ChannelMessage author="Rocket" date="06/21/2026" content={<>There are currently 4 online users and 17 offline!</>} isBot avatar={user5} />
       </Messages>
     </Container>
   );
