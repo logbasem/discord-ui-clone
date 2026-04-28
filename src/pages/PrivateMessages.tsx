@@ -1,18 +1,19 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { Send } from 'styled-icons/material';
+import { Section } from 'styled-icons/icomoon';
+import { privateUsers, UserProfileData } from '../data/userProfiles';
+import ChannelMessage from '../components/ChannelMessage';
+import UserProfile from '../components/UserProfile';
 import leoronne from '~/assets/img/avatar.jpg';
 import cyhi from '~/assets/img/cyhi.jpg';
-import ChannelMessage, { Mention } from '../components/ChannelMessage/index';
 
 const PageContainer = styled.div`
   min-height: 100%;
-  padding-top: 20px;
+  padding: 20px 24px;
   background-color: var(--primary);
   color: var(--white);
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
+  position: relative;
 `;
 
 const Container = styled.div`
@@ -41,22 +42,42 @@ const Messages = styled.div`
   padding: 20px 0;
   display: flex;
   flex-direction: column;
-  max-height: 100%;
-  overflow-y: scroll;
-  ::-webkit-scrollbar {
-    width: 8px;
-  }
-  ::-webkit-scrollbar-thumb {
-    background-color: var(--tertiary);
-    border-radius: 4px;
-  }
-  ::-webkit-scrollbar-track {
-    background-color: var(--secondary);
-  }
+  justify-content: center;
+  margin: 0;
 `;
 
-const PrivateMessagesPage: React.FC = () => {
-  const messagesRef = useRef() as React.MutableRefObject<HTMLDivElement>;
+const ClickHint = styled.p`
+  margin-top: 18px;
+  color: var(--gray);
+  font-size: 13px;
+`;
+
+const ClickableAuthor = styled.button`
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--white);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+`;
+
+interface PrivateMessagesPageProps {
+  selectedUser: UserProfileData | null;
+  onUserSelect: (user: UserProfileData | null) => void;
+}
+
+const chatFeed = [
+  { userId: 'bazingasdead', text: 'Hey, can we sync on the profile card update?' },
+  { userId: 'golddragon', text: 'Sure. I already wired the right sidebar variant.' },
+  { userId: 'lilith', text: 'Perfect, click my name to preview the popup profile.' },
+  { userId: 'thrishadugg', text: 'I pushed hover state polish for the resize handles.' },
+];
+
+const PrivateMessagesPage: React.FC<PrivateMessagesPageProps> = ({ selectedUser, onUserSelect }) => {
+  const popupRef = useRef<HTMLDivElement>(null);
+  const messagesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const div = messagesRef.current;
@@ -65,6 +86,23 @@ const PrivateMessagesPage: React.FC = () => {
       div.scrollTop = div.scrollHeight;
     }
   }, [messagesRef]);
+  
+  useEffect(() => {
+    if (!selectedUser) {
+      return undefined;
+    }
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+        onUserSelect(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [selectedUser, onUserSelect]);
+  
+  const clearSelectedUser = () => onUserSelect(null);
 
   return (
     <>
