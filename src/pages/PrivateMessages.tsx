@@ -1,16 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { Send } from 'styled-icons/material';
-import { Section } from 'styled-icons/icomoon';
 import { privateUsers, UserProfileData } from '../data/userProfiles';
 import ChannelMessage from '../components/ChannelMessage';
-import UserProfile from '../components/UserProfile';
-import leoronne from '~/assets/img/avatar.jpg';
-import cyhi from '~/assets/img/cyhi.jpg';
 
 const PageContainer = styled.div`
   min-height: 100%;
-  padding: 20px 24px;
+  padding: 20px 24px 0;
   background-color: var(--primary);
   color: var(--white);
   position: relative;
@@ -39,17 +35,11 @@ export const Title = styled.h1`
 `;
 
 const Messages = styled.div`
-  padding: 20px 0;
+  padding-top: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   margin: 0;
-`;
-
-const ClickHint = styled.p`
-  margin-top: 18px;
-  color: var(--gray);
-  font-size: 13px;
 `;
 
 const ClickableAuthor = styled.button`
@@ -61,6 +51,21 @@ const ClickableAuthor = styled.button`
   font-weight: 600;
   cursor: pointer;
   text-align: left;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const MessageWrapper = styled.div`
+  padding: 5px 0;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Similar to UserList hover effect */
+  }
 `;
 
 interface PrivateMessagesPageProps {
@@ -69,24 +74,33 @@ interface PrivateMessagesPageProps {
 }
 
 const chatFeed = [
-  { userId: 'bazingasdead', text: 'Hey, can we sync on the profile card update?' },
-  { userId: 'golddragon', text: 'Sure. I already wired the right sidebar variant.' },
-  { userId: 'lilith', text: 'Perfect, click my name to preview the popup profile.' },
-  { userId: 'thrishadugg', text: 'I pushed hover state polish for the resize handles.' },
+  { userId: 'log', text: 'Hiiiiiii!', date: '10/01/2026 - 10:00 AM' },
+  { userId: 'bazingasdead', text: 'hi, how r u?', date: '10/01/2026  - 10:01 AM' },
+  { userId: 'log', text: "I'm pretty good! I love private messages on Discord 2.0", date: '10/01/2026 - 10:02 AM' },
+  { userId: 'bazingasdead', text: 'what a coincidence I also love private messages on Discord 2.0', date: '10/01/2026 - 10:03 AM' },
+  { userId: 'bazingasdead', text: 'my favorite part is that the UI follows so many HCI principles', date: '10/01/2026 - 10:04 AM' },
+  { userId: 'log', text: "Omg YES I'm always saying this", date: '10/01/2026 - 10:05 AM' },
+  { userId: 'log', text: "I can't believe how intuitive and user-friendly the interface is", date: '10/01/2026 - 10:06 AM' },
+  { userId: 'bazingasdead', text: "same here, it's like they really understand how users interact with messaging apps", date: '10/01/2026 - 10:07 AM' },
+  { userId: 'log', text: 'Oh hey btw', date: '10/02/2026 - 7:00 PM' },
+  { userId: 'log', text: "What's your favorite color", date: '10/02/2026 - 7:09 PM' },
+  { userId: 'bazingasdead', text: 'blue', date: '10/02/2026 - 10:10 PM' },
+  { userId: 'bazingasdead', text: 'hbu', date: '10/02/2026 - 10:11 PM' },
+  { userId: 'log', text: 'Probably green', date: '10/02/2026 - 10:12 PM' },
 ];
 
 const PrivateMessagesPage: React.FC<PrivateMessagesPageProps> = ({ selectedUser, onUserSelect }) => {
   const popupRef = useRef<HTMLDivElement>(null);
   const messagesRef = useRef<HTMLDivElement>(null);
 
+  // Automatically display the chat partner's profile in the right sidebar
   useEffect(() => {
-    const div = messagesRef.current;
-
-    if (div) {
-      div.scrollTop = div.scrollHeight;
+    const chatPartnerUser = privateUsers.find((user) => user.id === 'log');
+    if (chatPartnerUser && !selectedUser) {
+      onUserSelect(chatPartnerUser);
     }
-  }, [messagesRef]);
-  
+  }, []);
+
   useEffect(() => {
     if (!selectedUser) {
       return undefined;
@@ -101,30 +115,41 @@ const PrivateMessagesPage: React.FC<PrivateMessagesPageProps> = ({ selectedUser,
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [selectedUser, onUserSelect]);
-  
-  const clearSelectedUser = () => onUserSelect(null);
+
+  useEffect(() => {
+    const div = messagesRef.current;
+    if (div) {
+      div.scrollTop = div.scrollHeight;
+    }
+  }, [chatFeed]);
 
   return (
     <>
       <Container>
         <Send size={14} color="var(--white)" />
-        <Title>Chat with @cyhi</Title>
+        <Title>Chat with Log</Title>
       </Container>
       <PageContainer>
-        <Messages ref={messagesRef}>
-          <ChannelMessage author="Cyhi" date="06/21/2026" content={<>Hiiiiiii!</>} avatar={cyhi} />
-          <ChannelMessage author="Leonardo Ronne" date="06/21/2026" content="hi, how r u?" avatar={leoronne} />
-          <ChannelMessage author="Cyhi" date="06/21/2026" content="I'm pretty good! I love private messages on Discord 2.0" avatar={cyhi} />
-          <ChannelMessage author="Leonardo Ronne" date="06/21/2026" content="what a coincidence I also love private messages on Discord 2.0" avatar={leoronne} />
-          <ChannelMessage author="Leonardo Ronne" date="06/21/2026" content="my favorite part is that the UI follows so many HCI principles" avatar={leoronne} />
-          <ChannelMessage author="Cyhi" date="06/21/2026" content="Omg YES I'm always saying this" avatar={cyhi} />
-          <ChannelMessage author="Cyhi" date="06/21/2026" content="I can't believe how intuitive and user-friendly the interface is" avatar={cyhi} />
-          <ChannelMessage author="Leonardo Ronne" date="06/21/2026" content="same here, it's like they really understand how users interact with messaging apps" avatar={leoronne} />
-          <ChannelMessage author="Cyhi" date="06/22/2026" content="Oh hey btw" avatar={cyhi} />
-          <ChannelMessage author="Cyhi" date="06/22/2026" content="What's your favorite color" avatar={cyhi} />
-          <ChannelMessage author="Leonardo Ronne" date="06/22/2026" content="blue" avatar={leoronne} />
-          <ChannelMessage author="Leonardo Ronne" date="06/22/2026" content="hbu" avatar={leoronne} />
-          <ChannelMessage author="Cyhi" date="06/22/2026" content="Probably green" avatar={cyhi} />
+        <Messages>
+          {chatFeed.map((item) => {
+            const user = privateUsers.find((entry) => entry.id === item.userId);
+            if (!user) return null;
+
+            return (
+              <MessageWrapper key={`${item.userId}-${item.text}`} onClick={() => onUserSelect(user)}>
+                <ChannelMessage
+                  author={(
+                    <ClickableAuthor type="button" onClick={() => onUserSelect(user)}>
+                      {user.username}
+                    </ClickableAuthor>
+                  )}
+                  date={item.date}
+                  content={item.text}
+                  avatar={user.avatar}
+                />
+              </MessageWrapper>
+            );
+          })}
         </Messages>
       </PageContainer>
     </>
