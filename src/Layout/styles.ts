@@ -51,7 +51,7 @@ export const RightSidebarWrapper = styled.div<{ $collapsed?: boolean }>`
 export const Main = styled.div`
   grid-row: 2;
   min-width: 0;
-  overflow: auto;
+  overflow: hidden;
 `;
 
 export const MessageInputContainer = styled.div`
@@ -107,7 +107,6 @@ export const CollapseButtonRight = styled.button<{ $collapsed: boolean }>`
   right: ${({ $collapsed }) => ($collapsed ? '0px' : '240px')};
   top: 15%;
   transform: translateY(-50%);
-  z-index: 100;
   width: 20px;
   height: 48px;
   border-radius: 6px 0 0 6px;
