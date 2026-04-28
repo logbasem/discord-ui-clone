@@ -1,9 +1,9 @@
 import React from 'react';
 import { LeftSidebarStyled } from './styles';
-import ServerName from '../ServerName';
 import ChannelList from '../ChannelList';
 import PrivateChatList from '../PrivateChatList';
 import Friends from '../FriendsButtons';
+import LeftBarTitle from '../LeftBarTitle';
 
 interface LeftSidebarProps {
   activeNav: string;
@@ -15,19 +15,21 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({activeNav}) => {
       case 'servers':
         return (
           <>
-            <ServerName name="HCI Test Server" />
+            <LeftBarTitle name="HCI Test Server" />
             <ChannelList />
           </>
         );
       case 'private':
         return (
           <>
+            <LeftBarTitle name="Direct Messages" hasAddNew />
             <PrivateChatList />
           </>
         );
       case 'groups':
         return (
           <>
+            <LeftBarTitle name="Group Chats" hasAddNew />
             <div>Group Chats stuff goes here</div>
           </>
         );
