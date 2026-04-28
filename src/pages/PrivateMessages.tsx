@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
+import { Send } from 'styled-icons/material';
 import leoronne from '~/assets/img/avatar.jpg';
 import cyhi from '~/assets/img/cyhi.jpg';
 import ChannelMessage, { Mention } from '../components/ChannelMessage/index';
@@ -27,11 +28,12 @@ const Container = styled.div`
   right: 0;
   width: auto;
   z-index: 2;
+  gap: 5px;
 `;
 
 export const Title = styled.h1`
-  font-size: 16px;
-  font-weight: bold;
+  font-size: 14px;
+  font-weight: 500;
   color: var(--white);
 `;
 
@@ -67,6 +69,7 @@ const PrivateMessagesPage: React.FC = () => {
   return (
     <>
       <Container>
+        <Send size={14} color="var(--white)" />
         <Title>Chat with @cyhi</Title>
       </Container>
       <PageContainer>
