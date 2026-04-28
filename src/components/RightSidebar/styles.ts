@@ -9,7 +9,7 @@ export const RightSidebarStyled = styled.div<{ $width: number; $hasSelectedUser?
   overflow-y: auto;
   position: relative;
   z-index: 10;
-  border-left: 1px solid var(--border-color);
+  border-left: 1px solid var(--white);
   ${({ $isEmptyState }) =>
     $isEmptyState &&
     css`
