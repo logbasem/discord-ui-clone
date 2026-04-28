@@ -51,7 +51,7 @@ export const RightSidebarWrapper = styled.div<{ $width: number }>`
 export const Main = styled.div`
   grid-row: 2;
   min-width: 0;
-  overflow: hidden;
+  overflow-y: scroll;
 `;
 
 export const MessageInputContainer = styled.div`

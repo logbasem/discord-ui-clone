@@ -16,7 +16,7 @@ const MIN_WIDTH = 150;
 const MAX_WIDTH = 400;
 const DEFAULT_WIDTH = 240;
 
-const RightSidebar: React.FC<Props> = ({ width, setWidth, activeNav, selectedUser }) => {
+const RightSidebar: React.FC<Props> = ({ width, setWidth, activeNav, selectedUser, setSelectedUser }) => {
   const cleanupRef = useRef<(() => void) | null>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const previousWidthRef = useRef<number>(DEFAULT_WIDTH);

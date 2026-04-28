@@ -1,11 +1,14 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { LeftSidebarStyled, ResizeHandle } from './styles';
-import ServerName from '../ServerName';
 import ChannelList from '../ChannelList';
+import PrivateChatList from '../PrivateChatList';
+import Friends from '../FriendsButtons';
+import LeftBarTitle from '../LeftBarTitle';
 
-export interface Props {
+interface LeftSidebarProps {
   width: number;
   setWidth: React.Dispatch<React.SetStateAction<number>>;
+  activeNav: string;
   selectedChannel?: string;
   onChannelSelect?: (channelName: string) => void;
 }
@@ -14,7 +17,7 @@ const MIN_WIDTH = 150;
 const MAX_WIDTH = 400;
 const DEFAULT_WIDTH = 240;
 
-const LeftSidebar: React.FC<Props> = ({ width, setWidth, selectedChannel, onChannelSelect }) => {
+const LeftSidebar: React.FC<LeftSidebarProps> = ({ width, setWidth, activeNav, selectedChannel, onChannelSelect}) => {
   const cleanupRef = useRef<(() => void) | null>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const previousWidthRef = useRef<number>(DEFAULT_WIDTH);
@@ -75,10 +78,38 @@ const LeftSidebar: React.FC<Props> = ({ width, setWidth, selectedChannel, onChan
     };
   };
 
+  const renderLeftSidebar = () => {
+    switch (activeNav) {
+      case 'servers':
+        return (
+          <>
+            <LeftBarTitle name="HCI Test Server" />
+            <ChannelList selectedChannel={selectedChannel} onChannelSelect={onChannelSelect} />
+          </>
+        );
+      case 'private':
+        return (
+          <>
+            <LeftBarTitle name="Direct Messages" hasAddNew />
+            <PrivateChatList />
+          </>
+        );
+      case 'groups':
+        return (
+          <>
+            <LeftBarTitle name="Group Chats" hasAddNew />
+            <div>Group Chats stuff goes here</div>
+          </>
+        );
+      default:
+        return null;
+    }
+  }
+
   return (
     <LeftSidebarStyled ref={sidebarRef} $width={width}>
-      <ServerName />
-      <ChannelList selectedChannel={selectedChannel} onChannelSelect={onChannelSelect} />
+      <Friends />
+      {renderLeftSidebar()}
       <ResizeHandle onMouseDown={handleResizeStart} role="separator" aria-label="Resize left sidebar" />
     </LeftSidebarStyled>
   );

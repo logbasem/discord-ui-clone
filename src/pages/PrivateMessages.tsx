@@ -1,40 +1,45 @@
 import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import ChannelMessage from '../components/ChannelMessage';
-import UserProfile from '../components/UserProfile';
+import { Send } from 'styled-icons/material';
 import { privateUsers, UserProfileData } from '../data/userProfiles';
+import ChannelMessage from '../components/ChannelMessage';
 
 const PageContainer = styled.div`
   min-height: 100%;
-  padding: 20px 24px;
+  padding: 20px 24px 0;
   background-color: var(--primary);
   color: var(--white);
   position: relative;
 `;
 
-const SectionTitle = styled.h3`
-  margin: 0 0 16px;
-  font-weight: 600;
+const Container = styled.div`
+  position: absolute;
+  display: flex;
+  padding: 5px;
+  background-color: var(--secondary);
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 0px 0px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  left: 0;
+  right: 0;
+  width: auto;
+  z-index: 2;
+  gap: 5px;
+`;
+
+export const Title = styled.h1`
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--white);
 `;
 
 const Messages = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-`;
-
-const PageText = styled.p`
-  min-height: 40px;
+  padding-top: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   margin: 0;
-`;
-
-const ClickHint = styled.p`
-  margin-top: 18px;
-  color: var(--gray);
-  font-size: 13px;
 `;
 
 const ClickableAuthor = styled.button`
@@ -46,6 +51,21 @@ const ClickableAuthor = styled.button`
   font-weight: 600;
   cursor: pointer;
   text-align: left;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const MessageWrapper = styled.div`
+  padding: 5px 0;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Similar to UserList hover effect */
+  }
 `;
 
 interface PrivateMessagesPageProps {
@@ -54,14 +74,32 @@ interface PrivateMessagesPageProps {
 }
 
 const chatFeed = [
-  { userId: 'bazingasdead', text: 'Hey, can we sync on the profile card update?' },
-  { userId: 'golddragon', text: 'Sure. I already wired the right sidebar variant.' },
-  { userId: 'lilith', text: 'Perfect, click my name to preview the popup profile.' },
-  { userId: 'thrishadugg', text: 'I pushed hover state polish for the resize handles.' },
+  { userId: 'log', text: 'Hiiiiiii!', date: '10/01/2026 - 10:00 AM' },
+  { userId: 'bazingasdead', text: 'hi, how r u?', date: '10/01/2026  - 10:01 AM' },
+  { userId: 'log', text: "I'm pretty good! I love private messages on Discord 2.0", date: '10/01/2026 - 10:02 AM' },
+  { userId: 'bazingasdead', text: 'what a coincidence I also love private messages on Discord 2.0', date: '10/01/2026 - 10:03 AM' },
+  { userId: 'bazingasdead', text: 'my favorite part is that the UI follows so many HCI principles', date: '10/01/2026 - 10:04 AM' },
+  { userId: 'log', text: "Omg YES I'm always saying this", date: '10/01/2026 - 10:05 AM' },
+  { userId: 'log', text: "I can't believe how intuitive and user-friendly the interface is", date: '10/01/2026 - 10:06 AM' },
+  { userId: 'bazingasdead', text: "same here, it's like they really understand how users interact with messaging apps", date: '10/01/2026 - 10:07 AM' },
+  { userId: 'log', text: 'Oh hey btw', date: '10/02/2026 - 7:00 PM' },
+  { userId: 'log', text: "What's your favorite color", date: '10/02/2026 - 7:09 PM' },
+  { userId: 'bazingasdead', text: 'blue', date: '10/02/2026 - 10:10 PM' },
+  { userId: 'bazingasdead', text: 'hbu', date: '10/02/2026 - 10:11 PM' },
+  { userId: 'log', text: 'Probably green', date: '10/02/2026 - 10:12 PM' },
 ];
 
 const PrivateMessagesPage: React.FC<PrivateMessagesPageProps> = ({ selectedUser, onUserSelect }) => {
   const popupRef = useRef<HTMLDivElement>(null);
+  const messagesRef = useRef<HTMLDivElement>(null);
+
+  // Automatically display the chat partner's profile in the right sidebar
+  useEffect(() => {
+    const chatPartnerUser = privateUsers.find((user) => user.id === 'log');
+    if (chatPartnerUser && !selectedUser) {
+      onUserSelect(chatPartnerUser);
+    }
+  }, []);
 
   useEffect(() => {
     if (!selectedUser) {
@@ -78,38 +116,43 @@ const PrivateMessagesPage: React.FC<PrivateMessagesPageProps> = ({ selectedUser,
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [selectedUser, onUserSelect]);
 
-  const clearSelectedUser = () => onUserSelect(null);
+  useEffect(() => {
+    const div = messagesRef.current;
+    if (div) {
+      div.scrollTop = div.scrollHeight;
+    }
+  }, [chatFeed]);
 
   return (
-    <PageContainer>
-      <SectionTitle>Private Messages</SectionTitle>
-      <Messages>
-        {chatFeed.map((item) => {
-          const user = privateUsers.find((entry) => entry.id === item.userId);
-          if (!user) return null;
+    <>
+      <Container>
+        <Send size={14} color="var(--white)" />
+        <Title>Chat with Log</Title>
+      </Container>
+      <PageContainer>
+        <Messages>
+          {chatFeed.map((item) => {
+            const user = privateUsers.find((entry) => entry.id === item.userId);
+            if (!user) return null;
 
-          return (
-            <div key={`${item.userId}-${item.text}`} onClick={() => onUserSelect(user)}>
-              <ChannelMessage
-                author={<ClickableAuthor type="button" onClick={() => onUserSelect(user)}>{user.username}</ClickableAuthor>}
-                date="Today"
-                content={item.text}
-                avatar={user.avatar}
-              />
-            </div>
-          );
-        })}
-      </Messages>
-      <ClickHint>Click a username in messages to open the user profile popup.</ClickHint>
-      {selectedUser && (
-        <UserProfile
-          user={selectedUser}
-          mode="popup"
-          popupRef={popupRef}
-          onClose={clearSelectedUser}
-        />
-      )}
-    </PageContainer>
+            return (
+              <MessageWrapper key={`${item.userId}-${item.text}`} onClick={() => onUserSelect(user)}>
+                <ChannelMessage
+                  author={(
+                    <ClickableAuthor type="button" onClick={() => onUserSelect(user)}>
+                      {user.username}
+                    </ClickableAuthor>
+                  )}
+                  date={item.date}
+                  content={item.text}
+                  avatar={user.avatar}
+                />
+              </MessageWrapper>
+            );
+          })}
+        </Messages>
+      </PageContainer>
+    </>
   );
 };
 

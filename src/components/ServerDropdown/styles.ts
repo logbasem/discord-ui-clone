@@ -3,7 +3,8 @@ import styled from 'styled-components';
 export const DropdownContainer = styled.div`
   position: absolute;
   top: 100%;
-  left: 600px;
+  left: calc(50% - 130px);
+  transform: translateX(-50%);
   background-color: var(--secondary);
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -29,9 +30,31 @@ export const DropdownItem = styled.div`
   }
 `;
 
+export const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-between; /* Ensures buttons are spaced evenly */
+  gap: 8px; /* Adds spacing between the buttons */
+  padding: 8px; /* Optional: Adds padding around the buttons */
+`;
+
+export const AddNewButton = styled.button`
+  width: 100%;
+  padding: 8px;
+  background-color: var(--primary);
+  color: var(--white);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: var(--quinary);
+  }
+`;
+
 export const SeeAllButton = styled.button`
   width: 100%;
-  padding: 8px 12px;
+  padding: 8px;
   background-color: var(--primary);
   color: var(--white);
   border: none;

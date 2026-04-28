@@ -135,6 +135,7 @@ const Layout: React.FC = () => {
         <LeftSidebar 
           width={leftWidth}
           setWidth={setLeftWidth}
+          activeNav={activeNav} 
           selectedChannel={selectedChannel} 
           onChannelSelect={setSelectedChannel} 
         />
