@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import avatar from '~/assets/img/user4.jpg';
+import avatar from '~/assets/img/avatar.jpg';
 import avatar2 from '~/assets/img/user5.jpg';
+import avatar3 from '~/assets/img/user4.jpg';
+import avatar4 from '~/assets/img/cyhi.jpg';
 import Code from '~/assets/svg/Code.svg';
 import {
   NavigationStyled,
@@ -24,10 +26,18 @@ import {
   NotificationItemTitle,
   NotificationItemTime,
   NotificationItemAvatar,
-  NotificationItemServerIcon,
   NotificationItemServerImg,
   NotificationNewIndicator,
   NotificationEmpty,
+  ProfilePopup,
+  ProfilePopupHeader,
+  ProfilePopupAvatar,
+  ProfilePopupUserInfo,
+  ProfilePopupUserName,
+  ProfilePopupUserStatus,
+  ProfilePopupContent,
+  ProfilePopupItem,
+  ProfilePopupDivider,
 } from './styles';
 
 interface NavigationProps {
@@ -37,8 +47,10 @@ interface NavigationProps {
 
 const Navigation: React.FC<NavigationProps> = ({ activeNav, onChange }) => {
   const [hasNotifications, setHasNotifications] = useState(true);
-  const [showPopup, setShowPopup] = useState(false);
-  const popupRef = useRef<HTMLDivElement>(null);
+  const [showNotificationPopup, setShowNotificationPopup] = useState(false);
+  const [showProfilePopup, setShowProfilePopup] = useState(false);
+  const notificationPopupRef = useRef<HTMLDivElement>(null);
+  const profilePopupRef = useRef<HTMLDivElement>(null);
 
   const navItems = [
     { id: 'servers', label: 'Servers' },
@@ -48,44 +60,60 @@ const Navigation: React.FC<NavigationProps> = ({ activeNav, onChange }) => {
 
   // Sample notifications data
   const notifications = [
-    { id: 1, type: 'message', title: 'New private message from: thrishadugg', time: '2 min ago', avatar, isNew: true },
+    { id: 1, type: 'message', title: 'New private message from: thrishadugg', time: '2 min ago', avatar: avatar3, isNew: true },
     { id: 2, type: 'mention', title: 'Lilith mentioned you in: Code', time: '15 min ago', serverName: 'Ronne Dev Server', isNew: true },
     { id: 3, type: 'friend', title: 'New Friend Request: logbasem', time: '1 hour ago', icon: '👤', avatar: avatar2, isNew: true },
     { id: 4, type: 'message', title: 'New private message from: logbasem', time: '3 hours ago', avatar: avatar2, isNew: false },
     { id: 5, type: 'mention', title: 'GoldDragon mentioned you in: General Chat', time: '5 hours ago', serverName: 'Ronne Dev Server', isNew: false },
-    { id: 6, type: 'friend', title: 'New Friend Request: thrishadugg', time: '1 day ago', icon: '👤', avatar, isNew: false },
-    { id: 7, type: 'message', title: 'New private message from: Lilith', time: '2 days ago', avatar, isNew: false }
+    { id: 6, type: 'friend', title: 'New Friend Request: thrishadugg', time: '1 day ago', icon: '👤', avatar: avatar3, isNew: false },
+    { id: 7, type: 'message', title: 'New private message from: Lilith', time: '2 days ago', avatar: avatar4, isNew: false }
   ];
 
-  // Close popup when clicking outside
+  // Close popups when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
-        setShowPopup(false);
+      if (notificationPopupRef.current && !notificationPopupRef.current.contains(event.target as Node)) {
+        setShowNotificationPopup(false);
+      }
+      if (profilePopupRef.current && !profilePopupRef.current.contains(event.target as Node)) {
+        setShowProfilePopup(false);
       }
     };
 
-    if (showPopup) {
+    if (showNotificationPopup || showProfilePopup) {
       document.addEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [showPopup]);
+  }, [showNotificationPopup, showProfilePopup]);
 
   const handleNotificationClick = () => {
-    setShowPopup(!showPopup);
-    if (!showPopup) {
+    setShowNotificationPopup(!showNotificationPopup);
+    setShowProfilePopup(false);
+    if (!showNotificationPopup) {
       setHasNotifications(false);
     }
   };
+
+  const handleProfileClick = () => {
+    setShowProfilePopup(!showProfilePopup);
+    setShowNotificationPopup(false);
+  };
+
+  const profileOptions = [
+    { id: 'edit-profile', label: 'Edit Profile', icon: '✎' },
+    { id: 'edit-status', label: 'Edit Status', icon: '🟢' },
+    { id: 'switch-accounts', label: 'Switch accounts', icon: '👤' },
+    { id: 'logout', label: 'Log out', icon: '🚪' },
+  ];
 
   return (
     <NavigationStyled>
       {/* Left: Notification Button */}
       <LeftSection>
-        <div style={{ position: 'relative' }} ref={popupRef}>
+        <div style={{ position: 'relative' }} ref={notificationPopupRef}>
           <NotificationButton onClick={handleNotificationClick} title="Notifications">
             <NotificationIcon>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -95,7 +123,7 @@ const Navigation: React.FC<NavigationProps> = ({ activeNav, onChange }) => {
             {hasNotifications && <NotificationBadge>3</NotificationBadge>}
           </NotificationButton>
           
-          {showPopup && (
+          {showNotificationPopup && (
             <NotificationPopup>
               <NotificationPopupHeader>
                 <NotificationPopupTitle>Notifications</NotificationPopupTitle>
@@ -151,10 +179,35 @@ const Navigation: React.FC<NavigationProps> = ({ activeNav, onChange }) => {
 
       {/* Right: Profile Button */}
       <RightSection>
-        <ProfileButton title="Profile">
-          <ProfileAvatar src={avatar} alt="Profile" />
-          <ProfileStatusDot />
-        </ProfileButton>
+        <div style={{ position: 'relative' }} ref={profilePopupRef}>
+          <ProfileButton onClick={handleProfileClick} title="Profile">
+            <ProfileAvatar src={avatar} alt="Profile" />
+            <ProfileStatusDot />
+          </ProfileButton>
+          
+          {showProfilePopup && (
+            <ProfilePopup>
+              <ProfilePopupHeader>
+                <ProfilePopupAvatar src={avatar} alt="Profile" />
+                <ProfilePopupUserInfo>
+                  <ProfilePopupUserName>Leonardo Ronne</ProfilePopupUserName>
+                  <ProfilePopupUserStatus>Online</ProfilePopupUserStatus>
+                </ProfilePopupUserInfo>
+              </ProfilePopupHeader>
+              <ProfilePopupContent>
+                {profileOptions.map((option, index) => (
+                  <React.Fragment key={option.id}>
+                    <ProfilePopupItem>
+                      <span>{option.icon}</span>
+                      {option.label}
+                    </ProfilePopupItem>
+                    {index < profileOptions.length - 1 && <ProfilePopupDivider />}
+                  </React.Fragment>
+                ))}
+              </ProfilePopupContent>
+            </ProfilePopup>
+          )}
+        </div>
       </RightSection>
     </NavigationStyled>
   );

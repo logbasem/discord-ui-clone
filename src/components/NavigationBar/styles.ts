@@ -231,6 +231,91 @@ export const NotificationEmpty = styled.div`
   font-size: 13px;
 `;
 
+/* ── Profile Popup ── */
+export const ProfilePopup = styled.div`
+  position: absolute;
+  top: 52px;
+  right: 8px;
+  width: 240px;
+  background-color: var(--secondary);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  z-index: 9999;
+  animation: fadeIn 0.2s ease;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+`;
+
+export const ProfilePopupHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+`;
+
+export const ProfilePopupAvatar = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+`;
+
+export const ProfilePopupUserInfo = styled.div``;
+
+export const ProfilePopupUserName = styled.p`
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--white);
+`;
+
+export const ProfilePopupUserStatus = styled.p`
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--gray);
+`;
+
+export const ProfilePopupContent = styled.div`
+  padding: 8px 0;
+`;
+
+export const ProfilePopupItem = styled.button`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background: transparent;
+  border: none;
+  color: var(--gray);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  text-align: left;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+    color: var(--white);
+  }
+`;
+
+export const ProfilePopupDivider = styled.div`
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.06);
+  margin: 4px 12px;
+`;
+
 /* ── Profile Button ── */
 export const ProfileButton = styled.button`
   position: relative;
