@@ -7,16 +7,18 @@ import LeftBarTitle from '../LeftBarTitle';
 
 interface LeftSidebarProps {
   activeNav: string;
+  selectedChannel?: string;
+  onChannelSelect?: (channelName: string) => void;
 }
 
-const LeftSidebar: React.FC<LeftSidebarProps> = ({activeNav}) => {
+const LeftSidebar: React.FC<LeftSidebarProps> = ({activeNav, selectedChannel, onChannelSelect}) => {
   const renderLeftSidebar = () => {
     switch (activeNav) {
       case 'servers':
         return (
           <>
             <LeftBarTitle name="HCI Test Server" />
-            <ChannelList />
+            <ChannelList selectedChannel={selectedChannel} onChannelSelect={onChannelSelect} />
           </>
         );
       case 'private':

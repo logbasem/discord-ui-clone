@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useState } from 'react';
 import { Grid, Main, Sidebar, RightSidebarWrapper, TopBar, Footer, MessageInputContainer, CollapseButtonLeft,
   CollapseButtonRight } from './styles';
 import { ChannelData, ChannelInfo, UserInfo, RightSidebar, LeftSidebar, MessageInput, Navigation, ServerList, ServerDropdown } from '../components';
@@ -29,6 +29,7 @@ const ChevronRight = () => (
 const Layout: React.FC = () => {
   const [activeNav, setActiveNav] = useState<string>('servers');
   const [selectedServer, setSelectedServer] = useState<string | null>('Ronne Dev Server');
+  const [selectedChannel, setSelectedChannel] = useState<string>('open-chat');
   const [showServerDropdown, setShowServerDropdown] = useState<boolean>(false);
   const [showSeeAll, setShowSeeAll] = useState<boolean>(false);
 
@@ -67,10 +68,6 @@ const Layout: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    console.log(`Server Dropdown is now ${showServerDropdown ? 'visible' : 'hidden'}`);
-  }, [showServerDropdown])
-
   const renderMainContent = () => {
     // If see-all is open, show server list
     if (showSeeAll) {
@@ -99,8 +96,8 @@ const Layout: React.FC = () => {
         if (selectedServer === 'Ronne Dev Server') {
           return (
             <>
-              <ChannelInfo />
-              <ChannelData />
+              <ChannelInfo channelName={selectedChannel} />
+              <ChannelData channelName={selectedChannel} />
             </>
           );
         }
@@ -113,8 +110,8 @@ const Layout: React.FC = () => {
       default:
         return (
           <>
-            <ChannelInfo />
-            <ChannelData />
+            <ChannelInfo channelName={selectedChannel} />
+            <ChannelData channelName={selectedChannel} />
           </>
         );
     }
@@ -131,7 +128,11 @@ const Layout: React.FC = () => {
 
       {/* Left sidebar */}
       <Sidebar $collapsed={leftCollapsed}>
-        <LeftSidebar activeNav={activeNav} />
+        <LeftSidebar 
+          activeNav={activeNav} 
+          selectedChannel={selectedChannel} 
+          onChannelSelect={setSelectedChannel} 
+        />
       </Sidebar>
 
       {/* Collapse toggle: left sidebar */}

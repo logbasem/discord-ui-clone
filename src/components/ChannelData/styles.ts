@@ -25,3 +25,24 @@ export const Messages = styled.div`
     background-color: var(--secondary);
   }
 `;
+
+export const EmptyChannel = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 20px;
+`;
+
+export const EmptyChannelIcon = styled.div`
+  font-size: 48px;
+  color: var(--gray);
+  margin-bottom: 16px;
+`;
+
+export const EmptyChannelText = styled.p`
+  font-size: 16px;
+  color: var(--gray);
+  text-align: center;
+`;
