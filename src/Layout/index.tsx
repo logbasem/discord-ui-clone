@@ -1,11 +1,11 @@
-import React, {useState } from 'react';
+import React, { useState } from 'react';
 import { Grid, Main, Sidebar, RightSidebarWrapper, TopBar, Footer, MessageInputContainer, CollapseButtonLeft,
   CollapseButtonRight } from './styles';
 import { ChannelData, ChannelInfo, UserInfo, RightSidebar, LeftSidebar, MessageInput, Navigation, ServerList, ServerDropdown } from '../components';
 import PrivateMessagesPage from '../pages/PrivateMessages';
 import GroupChatsPage from '../pages/GroupChats';
 import { ServerData } from '../components/ServerList';
-import { UserProfileData } from '../data/userProfiles';
+import { privateUsers, UserProfileData } from '../data/userProfiles';
 import { ChatMessage } from '../components/ChannelData';
 import { Mention } from '../components/ChannelMessage';
 import leoronne from '~/assets/img/avatar.jpg';
@@ -19,7 +19,7 @@ import NodeJS from '~/assets/svg/NodeJS.svg';
 import Pride from '~/assets/svg/Pride.svg';
 import Ronne from '~/assets/svg/Ronne.svg';
 
-const serverChatFeed: ChatMessage[] = [
+const fakeServer: ChatMessage[] = [
   { author: 'Leonardo Ronne', date: '06/21/2026', content: 'hi guys, how r u?', avatar: leoronne },
   {
     author: 'Luiky',
@@ -72,7 +72,6 @@ const serverChatFeed: ChatMessage[] = [
   { author: 'Rocket', date: '06/21/2026', content: <>There are currently 4 online users and 17 offline!</>, isBot: true, avatar: user5 },
 ];
 
-
 // Chevron icon pointing left (for "collapse left sidebar")
 const ChevronLeft = () => (
   <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
@@ -93,6 +92,7 @@ const Layout: React.FC = () => {
   const [selectedChannel, setSelectedChannel] = useState<string>('open-chat');
   const [showServerDropdown, setShowServerDropdown] = useState<boolean>(false);
   const [showSeeAll, setShowSeeAll] = useState<boolean>(false);
+  const [serverChatFeed, setServerChatFeed] = useState<ChatMessage[]>(fakeServer);
 
   const servers: ServerData[] = [
     { name: 'Ronne Dev Server', logo: Ronne, color: '#cc78a3', hasNotifications: true, mentions: 40, isHome: true },
@@ -130,6 +130,19 @@ const Layout: React.FC = () => {
       setShowServerDropdown(false);
       setShowSeeAll(false);
     }
+  };
+
+  const onSendMessage = (message: string) => {
+    // log message to console
+    console.log('Sent message:', message);
+    // create ChatData object and add to serverChatFeed
+    const newMessage: ChatMessage = {
+      author: 'golddragon', // hardcoded for now;
+      date: 'Today',
+      content: message,
+      avatar: privateUsers.find((u) => u.id === 'golddragon')?.avatar || '',
+    }
+    setServerChatFeed((prev) => [...prev, newMessage]);
   };
 
   const renderMainContent = () => {
@@ -237,7 +250,7 @@ const Layout: React.FC = () => {
       </RightSidebarWrapper>
 
       <MessageInputContainer>
-        <MessageInput onSendMessage={(message: string) => { console.log(message); }} />
+        <MessageInput onSendMessage={onSendMessage} />
       </MessageInputContainer>
 
       <Footer $leftCollapsed={leftCollapsed}>
