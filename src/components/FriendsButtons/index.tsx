@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { FriendsContainer, FriendsButton } from './styles';
 
 const Friends: React.FC = () => {

@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { RightSidebarStyled, ResizeHandle } from './styles';
 import UserProfile from '../UserProfile';
+import UserList from '../UserList';
 import { UserProfileData, privateUsers } from '../../data/userProfiles';
 import UserProfilePopup from '../UserProfilePopup';
 import { mockUsers, MockUser } from '../../data/mockUsers';
@@ -215,6 +216,29 @@ const RightSidebar: React.FC<Props> = ({
     );
   };
 
+  let sidebarContent = (
+    <Container>
+      <Role>
+        Online -
+        {' '}
+        {onlineUsers.length}
+      </Role>
+      {onlineUsers.map((user) => renderUserRow(user))}
+      <Role>
+        Offline -
+        {' '}
+        {offlineUsers.length}
+      </Role>
+      {offlineUsers.map((user) => renderUserRow(user))}
+    </Container>
+  );
+
+  if (activeNav === 'private') {
+    sidebarContent = <UserProfile user={selectedUser} mode="sidebar" />;
+  } else if (activeNav === 'servers') {
+    sidebarContent = <UserList />;
+  }
+
   return (
     <RightSidebarStyled
       ref={sidebarRef}
@@ -223,24 +247,7 @@ const RightSidebar: React.FC<Props> = ({
       $isEmptyState={activeNav === 'private' && !selectedUser}
     >
       <ResizeHandle onMouseDown={handleResizeStart} role="separator" aria-label="Resize right sidebar" />
-      {activeNav === 'private' ? (
-        <UserProfile user={selectedUser} mode="sidebar" />
-      ) : (
-        <Container>
-          <Role>
-            Online -
-            {' '}
-            {onlineUsers.length}
-          </Role>
-          {onlineUsers.map((user) => renderUserRow(user))}
-          <Role>
-            Offline -
-            {' '}
-            {offlineUsers.length}
-          </Role>
-          {offlineUsers.map((user) => renderUserRow(user))}
-        </Container>
-      )}
+      {sidebarContent}
       {popupUser && activeNav !== 'private' ? (
         <UserProfilePopup
           user={popupUser}

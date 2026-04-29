@@ -1,11 +1,17 @@
-import React, {useState } from 'react';
-import { Grid, Main, Sidebar, RightSidebarWrapper, TopBar, Footer, MessageInputContainer, CollapseButtonLeft,
+import React, { useState } from 'react';
+import { Grid, Main, Sidebar, ServerRailWrapper, RightSidebarWrapper, TopBar, Footer, MessageInputContainer, CollapseButtonLeft,
   CollapseButtonRight } from './styles';
 import { ChannelData, ChannelInfo, UserInfo, RightSidebar, LeftSidebar, MessageInput, Navigation, ServerList, ServerDropdown } from '../components';
 import PrivateMessagesPage from '../pages/PrivateMessages';
 import GroupChatsPage from '../pages/GroupChats';
 import { ServerData } from '../components/ServerList';
-import { UserProfileData } from '../data/userProfiles';
+import { privateUsers, UserProfileData } from '../data/userProfiles';
+import { ChatMessage } from '../components/ChannelData';
+import { Mention } from '../components/ChannelMessage';
+import leoronne from '~/assets/img/avatar.jpg';
+import user2 from '~/assets/img/user2.jpg';
+import user4 from '~/assets/img/user4.jpg';
+import user5 from '~/assets/img/user5.jpg';
 
 import RocketSeat from '~/assets/svg/RocketSeat.svg';
 import Code from '~/assets/svg/Code.svg';
@@ -27,12 +33,68 @@ const ChevronRight = () => (
   </svg>
 );
 
+const fakeServer: ChatMessage[] = [
+  { author: 'Leonardo Ronne', date: '06/21/2026', content: 'hi guys, how r u?', avatar: leoronne },
+  {
+    author: 'Luiky',
+    date: '06/21/2026',
+    content: (
+      <>
+        <Mention>@leoronne</Mention>
+        heyyyy
+      </>
+    ),
+    hasMention: true,
+    avatar: user2,
+  },
+  { author: 'Prynce', date: '06/21/2026', content: 'fine, tnx n u?' },
+  { author: 'Nyarth', date: '06/21/2026', content: 'heyy, whats up?' },
+  { author: 'John Doe', date: '06/21/2026', content: 'hey, what r u up 2?' },
+  { author: 'Maria Ciclano', date: '06/21/2026', content: 'whats gooooooood?!' },
+  { author: 'H. Montanha', date: '06/21/2026', content: "good, just coding some rocketseat's challenges" },
+  { author: 'Ronne12', date: '06/21/2026', content: 'good morning guys', avatar: user4 },
+  {
+    author: 'James',
+    date: '06/21/2026',
+    hasMention: true,
+    content: (
+      <>
+        <Mention>@leoronne</Mention>
+        heyy
+      </>
+    ),
+  },
+  { author: 'Enzo João', date: '06/21/2026', content: 'fine, tnx n u?' },
+  { author: 'Valentina de Jesus', date: '06/21/2026', content: 'whats gooooooood?!' },
+  { author: 'Enzo José', date: '06/21/2026', content: 'hey, what r u up 2?' },
+  { author: 'Valentina Maria', date: '06/21/2026', content: 'heyy, whats up?' },
+  {
+    author: 'Brunno Enzo',
+    date: '06/21/2026',
+    hasMention: true,
+    content: (
+      <>
+        <Mention>
+          @leoronne
+          {' '}
+        </Mention>
+        good, just coding some rocketseat&#39;s challenges
+      </>
+    ),
+  },
+  { author: 'Lara', date: '06/21/2026', content: 'fine, tnx n u?' },
+  { author: 'Lohaine', date: '06/21/2026', content: 'heyy, whats up?' },
+  { author: 'Lika', date: '06/21/2026', content: 'whats gooooooood?!' },
+  { author: 'Rocket', date: '06/21/2026', content: <>There are currently 4 online users and 17 offline!</>, isBot: true, avatar: user5 },
+];
+
 const Layout: React.FC = () => {
   const [activeNav, setActiveNav] = useState<string>('servers');
   const [selectedServer, setSelectedServer] = useState<string | null>('Ronne Dev Server');
   const [selectedChannel, setSelectedChannel] = useState<string>('open-chat');
   const [showServerDropdown, setShowServerDropdown] = useState<boolean>(false);
   const [showSeeAll, setShowSeeAll] = useState<boolean>(false);
+  const [serverChatFeed, setServerChatFeed] = useState<ChatMessage[]>(fakeServer);
 
   const servers: ServerData[] = [
     { name: 'Ronne Dev Server', logo: Ronne, color: '#cc78a3', hasNotifications: true, mentions: 40, isHome: true },
@@ -83,8 +145,35 @@ const Layout: React.FC = () => {
     setShowSeeAll(false);
   };
 
-  const handleSendMessage = () => {
-    // Placeholder until server/group chat composer state is unified.
+  const handleSendMessage = (message: string) => {
+    const newMessage: ChatMessage = {
+      author: 'golddragon',
+      date: 'Today',
+      content: message,
+      avatar: privateUsers.find((u) => u.id === 'golddragon')?.avatar || '',
+    };
+
+    const mentionRegex = /@(\w+)/;
+    const mentionMatch = message.match(mentionRegex);
+
+    if (mentionMatch) {
+      const mentionedUser = privateUsers.find((user) => user.username === mentionMatch[1]);
+      if (mentionedUser) {
+        newMessage.hasMention = true;
+        newMessage.content = (
+          <>
+            <Mention>
+              @
+              {mentionedUser.username}
+              {' '}
+            </Mention>
+            {message.replace(mentionRegex, '').trim()}
+          </>
+        );
+      }
+    }
+
+    setServerChatFeed((prev) => [...prev, newMessage]);
   };
 
   /** Clears unread badge for the tapped group chat (persisted until refresh). */
@@ -132,7 +221,7 @@ const Layout: React.FC = () => {
           return (
             <>
               <ChannelInfo channelName={selectedChannel} />
-              <ChannelData channelName={selectedChannel} messages={[]} />
+              <ChannelData channelName={selectedChannel} messages={serverChatFeed} />
             </>
           );
         }
@@ -146,20 +235,29 @@ const Layout: React.FC = () => {
         return (
           <>
             <ChannelInfo channelName={selectedChannel} />
-            <ChannelData channelName={selectedChannel} messages={[]} />
+            <ChannelData channelName={selectedChannel} messages={serverChatFeed} />
           </>
         );
     }
   };
 
   return (
-    <Grid $leftWidth={leftWidth} $rightWidth={rightWidth}>
+    <Grid $leftWidth={leftWidth} $rightWidth={rightWidth} $serverWidth={activeNav === 'servers' ? 72 : 0}>
       <TopBar>
         <Navigation activeNav={activeNav} onChange={handleNavChange} />
         {showServerDropdown && (
           <ServerDropdown onServerClick={handleServerClick} mostRecentServers={recentServers} />
         )}
       </TopBar>
+
+      {/* Server rail (servers page only) */}
+      <ServerRailWrapper $visible={activeNav === 'servers'}>
+        <ServerList
+          onServerClick={handleServerClick}
+          selectedServer={selectedServer}
+          mostRecentServers={recentServers.map((server) => server.name)}
+        />
+      </ServerRailWrapper>
 
       {/* Left sidebar */}
       <Sidebar $width={leftWidth}>
@@ -180,6 +278,7 @@ const Layout: React.FC = () => {
       <CollapseButtonLeft
         $collapsed={leftCollapsed}
         $leftWidth={leftWidth}
+        $serverOffset={activeNav === 'servers' ? 72 : 0}
         onClick={() => setLeftWidth((w) => (w === 0 ? 240 : 0))}
         title={leftCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         aria-label={leftCollapsed ? 'Expand left sidebar' : 'Collapse left sidebar'}
