@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Grid, Main, Sidebar, RightSidebarWrapper, TopBar, Footer, MessageInputContainer, CollapseButtonLeft,
-  CollapseButtonRight } from './styles';
+import { Grid, Main, Sidebar, RightSidebarWrapper, TopBar, Footer, MessageInputContainer, CollapseButtonLeft, CollapseButtonRight } from './styles';
 import { ChannelData, ChannelInfo, UserInfo, RightSidebar, LeftSidebar, MessageInput, Navigation, ServerList, ServerDropdown } from '../components';
 import PrivateMessagesPage from '../pages/PrivateMessages';
 import GroupChatsPage from '../pages/GroupChats';
@@ -60,8 +59,7 @@ const fakeServer: ChatMessage[] = [
     hasMention: true,
     content: (
       <>
-        <Mention>@leoronne</Mention>
-        {' '}
+        <Mention>@leoronne</Mention> 
         good, just coding some rocketseat&#39;s challenges
       </>
     ),
@@ -109,7 +107,7 @@ const Layout: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<UserProfileData | null>(null);
   const leftCollapsed = leftWidth === 0;
   const rightCollapsed = rightWidth === 0;
-  
+
   const handleServerClick = (serverName: string) => {
     if (serverName === 'See All') {
       setShowSeeAll(true);
@@ -135,13 +133,36 @@ const Layout: React.FC = () => {
   const onSendMessage = (message: string) => {
     // log message to console
     console.log('Sent message:', message);
+
     // create ChatData object and add to serverChatFeed
     const newMessage: ChatMessage = {
       author: 'golddragon', // hardcoded for now;
       date: 'Today',
       content: message,
       avatar: privateUsers.find((u) => u.id === 'golddragon')?.avatar || '',
+    };
+
+    // if message contains @ sign and matches a username, set hasMention to true and include Mention component in content
+    const mentionRegex = /@(\w+)/;
+    const mentionMatch = message.match(mentionRegex);
+
+    if (mentionMatch) {
+      const mentionedUser = privateUsers.find((user) => user.username === mentionMatch[1]);
+      if (mentionedUser) {
+        newMessage.hasMention = true;
+        newMessage.content = (
+          <>
+            <Mention>
+              @
+              {mentionedUser.username}
+              {' '}
+            </Mention> 
+            {message.replace(mentionRegex, '').trim()}
+          </>
+        );
+      }
     }
+
     setServerChatFeed((prev) => [...prev, newMessage]);
   };
 
@@ -180,7 +201,7 @@ const Layout: React.FC = () => {
         }
         return (
           <div style={{ padding: '20px' }}>
-            Channels for 
+            Channels for
             {selectedServer}
           </div>
         );
@@ -198,20 +219,12 @@ const Layout: React.FC = () => {
     <Grid $leftWidth={leftWidth} $rightWidth={rightWidth}>
       <TopBar>
         <Navigation activeNav={activeNav} onChange={handleNavChange} />
-        {showServerDropdown && (
-          <ServerDropdown onServerClick={handleServerClick} mostRecentServers={recentServers} />
-        )}
+        {showServerDropdown && <ServerDropdown onServerClick={handleServerClick} mostRecentServers={recentServers} />}
       </TopBar>
 
       {/* Left sidebar */}
       <Sidebar $width={leftWidth}>
-        <LeftSidebar 
-          width={leftWidth}
-          setWidth={setLeftWidth}
-          activeNav={activeNav} 
-          selectedChannel={selectedChannel} 
-          onChannelSelect={setSelectedChannel} 
-        />
+        <LeftSidebar width={leftWidth} setWidth={setLeftWidth} activeNav={activeNav} selectedChannel={selectedChannel} onChannelSelect={setSelectedChannel} />
       </Sidebar>
 
       {/* Collapse toggle: left sidebar */}
@@ -240,13 +253,7 @@ const Layout: React.FC = () => {
 
       {/* Right sidebar */}
       <RightSidebarWrapper $width={rightWidth}>
-        <RightSidebar
-          width={rightWidth}
-          setWidth={setRightWidth}
-          activeNav={activeNav}
-          selectedUser={selectedUser}
-          setSelectedUser={setSelectedUser}
-        />
+        <RightSidebar width={rightWidth} setWidth={setRightWidth} activeNav={activeNav} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
       </RightSidebarWrapper>
 
       <MessageInputContainer>
