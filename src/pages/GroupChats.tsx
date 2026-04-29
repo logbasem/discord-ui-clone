@@ -16,6 +16,7 @@ import user5 from '~/assets/img/user5.jpg';
 import idk from '~/assets/img/discord_logo_clone.jpeg';
 import user7 from '~/assets/img/pic7.jpeg';
 import user8 from '~/assets/img/pic8.jpeg';
+import { ChatMessage } from '../components/ChannelData';
 
 const PageContainer = styled.div`
   min-height: 100%;
@@ -206,6 +207,8 @@ interface GroupChatsPageProps {
   onSearchChange: (value: string) => void;
   onBack: () => void;
   onHighlightUser: (name: string | null) => void;
+  onSendMessage: (message: string) => void;
+  messages: ChatMessage[];
 }
 
 const avatarByName: Record<string, string | undefined> = {
@@ -229,27 +232,18 @@ const getInitials = (name: string) =>
     .slice(0, 2)
     .toUpperCase();
 
-const GroupChatsPage: React.FC<GroupChatsPageProps> = ({
-  selectedGroupId,
-  searchTerm,
-  onSearchChange,
-  onBack,
-  onHighlightUser,
-}) => {
+const GroupChatsPage: React.FC<GroupChatsPageProps> = ({ selectedGroupId, searchTerm, onSearchChange, onBack, onHighlightUser, onSendMessage, messages }) => {
   const messagesRef = useRef<HTMLDivElement>(null);
   const [popupUser, setPopupUser] = React.useState<MockUser | null>(null);
   const [popupPosition, setPopupPosition] = React.useState({ top: 120, left: 120 });
-  const selectedGroup = useMemo(
-    () => groupChats.find((group) => group.id === selectedGroupId),
-    [selectedGroupId]
-  );
+  const selectedGroup = useMemo(() => groupChats.find((group) => group.id === selectedGroupId), [selectedGroupId]);
 
   useEffect(() => {
     const div = messagesRef.current;
     if (div) {
       div.scrollTop = div.scrollHeight;
     }
-  }, [selectedGroup]);
+  }, [messages]);
 
   const closePopup = () => {
     setPopupUser(null);
@@ -283,18 +277,23 @@ const GroupChatsPage: React.FC<GroupChatsPageProps> = ({
         <EmptyState>
           <EmptyIcon />
           <Heading>Your Group Chats</Heading>
-          <Subtext>
-            Select a group chat from the sidebar or create a new one to get started.
-          </Subtext>
-          <EmptySearch
-            placeholder="Search your group chats..."
-            value={searchTerm}
-            onChange={(event) => onSearchChange(event.target.value)}
-          />
+          <Subtext>Select a group chat from the sidebar or create a new one to get started.</Subtext>
+          <EmptySearch placeholder="Search your group chats..." value={searchTerm} onChange={(event) => onSearchChange(event.target.value)} />
         </EmptyState>
       </PageContainer>
     );
   }
+
+  // Combine static group messages with dynamically added messages
+  const combinedMessages: ChatMessage[] = [
+    ...selectedGroup.messages.map((msg) => ({
+      author: msg.sender,
+      date: msg.timestamp,
+      content: msg.text,
+      avatar: avatarByName[msg.sender],
+    })),
+    ...messages,
+  ];
 
   return (
     <PageContainer>
@@ -323,28 +322,21 @@ const GroupChatsPage: React.FC<GroupChatsPageProps> = ({
         </HeaderActions>
       </ChatHeader>
       <Messages ref={messagesRef}>
-        {selectedGroup.messages.map((message) => (
+        {combinedMessages.map((message, index) => (
           <ChannelMessage
-            key={`${selectedGroup.id}-${message.sender}-${message.timestamp}`}
+            key={`${selectedGroup.id}-${message.date}-${message.content}`}
             author={(
-              <ClickableAuthor type="button" onClick={(event) => onAuthorClick(message.sender, event)}>
-                {message.sender}
+              <ClickableAuthor type="button" onClick={(event) => onAuthorClick(String(message.author), event)}>
+                {message.author}
               </ClickableAuthor>
             )}
-            date={message.timestamp}
-            content={message.text}
-            avatar={avatarByName[message.sender]}
+            date={message.date}
+            content={message.content}
+            avatar={avatarByName[String(message.author)]}
           />
         ))}
       </Messages>
-      {popupUser ? (
-        <UserProfilePopup
-          user={popupUser}
-          position={popupPosition}
-          onClose={closePopup}
-          onMessageUser={() => closePopup()}
-        />
-      ) : null}
+      {popupUser ? <UserProfilePopup user={popupUser} position={popupPosition} onClose={closePopup} onMessageUser={() => closePopup()} /> : null}
     </PageContainer>
   );
 };

@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Grid, Main, Sidebar, ServerRailWrapper, RightSidebarWrapper, TopBar, Footer, MessageInputContainer, CollapseButtonLeft,
-  CollapseButtonRight } from './styles';
+import { Grid, Main, Sidebar, ServerRailWrapper, RightSidebarWrapper, TopBar, Footer, MessageInputContainer, CollapseButtonLeft, CollapseButtonRight } from './styles';
 import { ChannelData, ChannelInfo, UserInfo, RightSidebar, LeftSidebar, MessageInput, Navigation, ServerList, ServerDropdown } from '../components';
-import PrivateMessagesPage from '../pages/PrivateMessages';
+import PrivateMessagesPage, { PrivateMessage } from '../pages/PrivateMessages';
 import GroupChatsPage from '../pages/GroupChats';
 import UserProfilePopup from '../components/UserProfilePopup';
 import AddServerModal from '../components/AddServerModal';
@@ -77,10 +76,7 @@ const fakeServer: ChatMessage[] = [
     hasMention: true,
     content: (
       <>
-        <Mention>
-          @leoronne
-          {' '}
-        </Mention>
+        <Mention>@leoronne </Mention>
         good, just coding some rocketseat&#39;s challenges
       </>
     ),
@@ -91,6 +87,22 @@ const fakeServer: ChatMessage[] = [
   { author: 'Rocket', date: '06/21/2026', content: <>There are currently 4 online users and 17 offline!</>, isBot: true, avatar: user5 },
 ];
 
+const fakePrivateMessages: PrivateMessage[] = [
+  { userId: 'log', content: 'Hiiiiiii!', date: '10/01/2026 - 10:00 AM' },
+  { userId: 'golddragon', content: 'hi, how r u?', date: '10/01/2026  - 10:01 AM' },
+  { userId: 'log', content: "I'm pretty good! I love private messages on Discord 2.0", date: '10/01/2026 - 10:02 AM' },
+  { userId: 'golddragon', content: 'what a coincidence I also love private messages on Discord 2.0', date: '10/01/2026 - 10:03 AM' },
+  { userId: 'golddragon', content: 'my favorite part is that the UI follows so many HCI principles', date: '10/01/2026 - 10:04 AM' },
+  { userId: 'log', content: "Omg YES I'm always saying this", date: '10/01/2026 - 10:05 AM' },
+  { userId: 'log', content: "I can't believe how intuitive and user-friendly the interface is", date: '10/01/2026 - 10:06 AM' },
+  { userId: 'golddragon', content: "same here, it's like they really understand how users interact with messaging apps", date: '10/01/2026 - 10:07 AM' },
+  { userId: 'log', content: 'Oh hey btw', date: '10/02/2026 - 7:00 PM' },
+  { userId: 'log', content: "What's your favorite color", date: '10/02/2026 - 7:09 PM' },
+  { userId: 'golddragon', content: 'blue', date: '10/02/2026 - 10:10 PM' },
+  { userId: 'golddragon', content: 'hbu', date: '10/02/2026 - 10:11 PM' },
+  { userId: 'log', content: 'Probably green', date: '10/02/2026 - 10:12 PM' },
+];
+
 const Layout: React.FC = () => {
   const [activeNav, setActiveNav] = useState<string>('servers');
   const [selectedServer, setSelectedServer] = useState<string | null>('Ronne Dev Server');
@@ -98,6 +110,9 @@ const Layout: React.FC = () => {
   const [showServerDropdown, setShowServerDropdown] = useState<boolean>(false);
   const [showSeeAll, setShowSeeAll] = useState<boolean>(false);
   const [serverChatFeed, setServerChatFeed] = useState<ChatMessage[]>(fakeServer);
+  const [privateChatFeed, setPrivateChatFeed] = useState<PrivateMessage[]>(fakePrivateMessages);
+  const [groupChatFeeds, setGroupChatFeeds] = useState<Record<string, ChatMessage[]>>({});
+
   const [servers, setServers] = useState<ServerData[]>([
     { name: 'Ronne Dev Server', logo: Ronne, color: '#cc78a3', hasNotifications: true, mentions: 40, isHome: true },
     { name: 'LGBTQIA+ Pride', logo: Pride, color: '#fff', hasNotifications: true, mentions: 11 },
@@ -122,7 +137,7 @@ const Layout: React.FC = () => {
   const [isAddServerModalOpen, setAddServerModalOpen] = useState(false);
   const leftCollapsed = leftWidth === 0;
   const rightCollapsed = rightWidth === 0;
-  
+
   const handleServerClick = (serverName: string) => {
     if (serverName === 'See All') {
       setShowSeeAll(true);
@@ -155,12 +170,15 @@ const Layout: React.FC = () => {
     setShowSeeAll(false);
   };
 
-  const handleSendMessage = (message: string) => {
-    const newMessage: ChatMessage = {
-      author: 'golddragon',
+  const onSendMessage = (message: string) => {
+    console.log('Sent message:', message);
+
+    const newMessage: ChatMessage | PrivateMessage = {
+      userId: activeNav === 'private' ? 'log' : '',
+      author: activeNav === 'servers' || activeNav === 'groups' ? 'log' : undefined,
       date: 'Today',
       content: message,
-      avatar: privateUsers.find((u) => u.id === 'golddragon')?.avatar || '',
+      avatar: privateUsers.find((u) => u.id === 'log')?.avatar || '',
     };
 
     const mentionRegex = /@(\w+)/;
@@ -169,13 +187,14 @@ const Layout: React.FC = () => {
     if (mentionMatch) {
       const mentionedUser = privateUsers.find((user) => user.username === mentionMatch[1]);
       if (mentionedUser) {
-        newMessage.hasMention = true;
+        if (activeNav === 'servers' || activeNav === 'groups') {
+          (newMessage as ChatMessage).hasMention = true;
+        }
         newMessage.content = (
           <>
             <Mention>
               @
-              {mentionedUser.username}
-              {' '}
+              {mentionedUser.username} 
             </Mention>
             {message.replace(mentionRegex, '').trim()}
           </>
@@ -183,7 +202,16 @@ const Layout: React.FC = () => {
       }
     }
 
-    setServerChatFeed((prev) => [...prev, newMessage]);
+    if (activeNav === 'servers') {
+      setServerChatFeed((prev) => [...prev, newMessage as ChatMessage]);
+    } else if (activeNav === 'private') {
+      setPrivateChatFeed((prev) => [...prev, newMessage as PrivateMessage]);
+    } else if (activeNav === 'groups' && selectedGroupId) {
+      setGroupChatFeeds((prev) => ({
+        ...prev,
+        [selectedGroupId]: [...(prev[selectedGroupId] || []), newMessage as ChatMessage],
+      }));
+    }
   };
 
   /** Clears unread badge for the tapped group chat (persisted until refresh). */
@@ -213,10 +241,7 @@ const Layout: React.FC = () => {
     setMutedGroupIds((current) => ({ ...current, [groupId]: !current[groupId] }));
   };
 
-  const handleServerAuthorClick = (
-    authorName: string,
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
+  const handleServerAuthorClick = (authorName: string, event: React.MouseEvent<HTMLButtonElement>) => {
     const matched = mockUsers.find((user) => user.name === authorName);
     const fallback: MockUser = {
       id: `unknown-${authorName.toLowerCase().replace(/\s+/g, '-')}`,
@@ -258,33 +283,21 @@ const Layout: React.FC = () => {
     // Otherwise render based on activeNav
     switch (activeNav) {
       case 'private':
-        return <PrivateMessagesPage onUserSelect={setSelectedUser} selectedUser={selectedUser} />;
+        return <PrivateMessagesPage onUserSelect={setSelectedUser} selectedUser={selectedUser} messages={privateChatFeed} />;
       case 'groups':
-        return (
-          <GroupChatsPage
-            selectedGroupId={selectedGroupId}
-            searchTerm={groupSearchTerm}
-            onSearchChange={setGroupSearchTerm}
-            onBack={handleGroupBack}
-            onHighlightUser={setHighlightedUser}
-          />
-        );
+        return <GroupChatsPage selectedGroupId={selectedGroupId} searchTerm={groupSearchTerm} onSearchChange={setGroupSearchTerm} onBack={handleGroupBack} onHighlightUser={setHighlightedUser} onSendMessage={onSendMessage} messages={selectedGroupId ? groupChatFeeds[selectedGroupId] || [] : []} />;
       case 'servers':
         if (selectedServer === 'Ronne Dev Server') {
           return (
             <>
               <ChannelInfo channelName={selectedChannel} />
-              <ChannelData
-                channelName={selectedChannel}
-                messages={serverChatFeed}
-                onAuthorClick={handleServerAuthorClick}
-              />
+              <ChannelData channelName={selectedChannel} messages={serverChatFeed} onAuthorClick={handleServerAuthorClick} />
             </>
           );
         }
         return (
           <div style={{ padding: '20px' }}>
-            Channels for 
+            Channels for
             {selectedServer}
           </div>
         );
@@ -292,11 +305,7 @@ const Layout: React.FC = () => {
         return (
           <>
             <ChannelInfo channelName={selectedChannel} />
-            <ChannelData
-              channelName={selectedChannel}
-              messages={serverChatFeed}
-              onAuthorClick={handleServerAuthorClick}
-            />
+            <ChannelData channelName={selectedChannel} messages={serverChatFeed} onAuthorClick={handleServerAuthorClick} />
           </>
         );
     }
@@ -306,29 +315,22 @@ const Layout: React.FC = () => {
     <Grid $leftWidth={leftWidth} $rightWidth={rightWidth} $serverWidth={activeNav === 'servers' ? 72 : 0}>
       <TopBar>
         <Navigation activeNav={activeNav} onChange={handleNavChange} />
-        {showServerDropdown && (
-          <ServerDropdown onServerClick={handleServerClick} mostRecentServers={recentServers} />
-        )}
+        {showServerDropdown && <ServerDropdown onServerClick={handleServerClick} mostRecentServers={recentServers} />}
       </TopBar>
 
       {/* Server rail (servers page only) */}
       <ServerRailWrapper $visible={activeNav === 'servers'}>
-        <ServerList
-          onServerClick={handleServerClick}
-          selectedServer={selectedServer}
-          allServers={servers}
-          onAddServerClick={() => setAddServerModalOpen(true)}
-        />
+        <ServerList onServerClick={handleServerClick} selectedServer={selectedServer} allServers={servers} onAddServerClick={() => setAddServerModalOpen(true)} />
       </ServerRailWrapper>
 
       {/* Left sidebar */}
       <Sidebar $width={leftWidth}>
-        <LeftSidebar 
+        <LeftSidebar
           width={leftWidth}
           setWidth={setLeftWidth}
-          activeNav={activeNav} 
-          selectedChannel={selectedChannel} 
-          onChannelSelect={setSelectedChannel} 
+          activeNav={activeNav}
+          selectedChannel={selectedChannel}
+          onChannelSelect={setSelectedChannel}
           selectedGroupId={selectedGroupId}
           onGroupSelect={handleGroupSelect}
           dismissedUnreadByGroup={dismissedUnreadByGroup}
@@ -379,20 +381,13 @@ const Layout: React.FC = () => {
       </RightSidebarWrapper>
 
       <MessageInputContainer>
-        <MessageInput onSendMessage={handleSendMessage} />
+        <MessageInput onSendMessage={onSendMessage} />
       </MessageInputContainer>
 
       <Footer $leftCollapsed={leftCollapsed}>
         <UserInfo />
       </Footer>
-      {popupUser ? (
-        <UserProfilePopup
-          user={popupUser}
-          position={popupPosition}
-          onClose={() => setPopupUser(null)}
-          onMessageUser={() => setPopupUser(null)}
-        />
-      ) : null}
+      {popupUser ? <UserProfilePopup user={popupUser} position={popupPosition} onClose={() => setPopupUser(null)} onMessageUser={() => setPopupUser(null)} /> : null}
       {isAddServerModalOpen ? (
         <AddServerModal
           onClose={() => setAddServerModalOpen(false)}

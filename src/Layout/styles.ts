@@ -114,7 +114,7 @@ export const ServerRailWrapper = styled.div<{ $visible: boolean }>`
   overflow: visible;
   background-color: var(--tertiary);
   position: relative;
-  z-index: 120;
+  z-index: 10;
 `;
 
 export const CollapseButtonRight = styled.button<{ $collapsed: boolean; $rightWidth: number }>`
