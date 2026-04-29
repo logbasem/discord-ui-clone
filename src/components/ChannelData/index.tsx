@@ -1,33 +1,33 @@
+// src/components/ChannelData/index.tsx
 import React, { useRef, useEffect } from 'react';
-
-import leoronne from '~/assets/img/avatar.jpg';
 import cyhi from '~/assets/img/cyhi.jpg';
-import user2 from '~/assets/img/user2.jpg';
-import user4 from '~/assets/img/user4.jpg';
-import user5 from '~/assets/img/user5.jpg';
-
-import ChannelMessage, { Mention } from '../ChannelMessage';
-
+import ChannelMessage from '../ChannelMessage';
 import { Container, Messages, EmptyChannel, EmptyChannelIcon, EmptyChannelText } from './styles';
 
-export interface Props {
-  channelName?: string;
+export interface ChatMessage {
+  author: string;
+  date: string;
+  content: React.ReactNode;
+  hasMention?: boolean;
+  isBot?: boolean;
+  avatar?: string;
 }
 
-const ChannelData: React.FC<Props> = ({channelName}) => {
+export interface Props {
+  channelName: string;
+  messages: ChatMessage[];
+}
+
+const ChannelData: React.FC<Props> = ({ channelName, messages }) => {
   const messagesRef = useRef() as React.MutableRefObject<HTMLDivElement>;
-  const users = ['Prynce', 'Nyarth', 'John Doe', 'Maria Ciclano', 'H. Montanha', 'James', 'Enzo João', 'Valentina de Jesus', 'Enzo José', 'Valentina Maria', 'Brunno Enzo', 'Lara', 'Lohaine', 'Lika'];
-  const messages = ['fine, tnx n u?', 'heyy, whats up?', 'hey, what r u up 2?', 'whats gooooooood?!', "good, just coding some rocketseat's challenges"];
 
   useEffect(() => {
     const div = messagesRef.current;
-
     if (div) {
       div.scrollTop = div.scrollHeight;
     }
-  }, [messagesRef]);
+  }, [messages]);
 
-  // Show empty state for channels other than open-chat
   if (channelName !== 'open-chat') {
     return (
       <Container>
@@ -46,51 +46,18 @@ const ChannelData: React.FC<Props> = ({channelName}) => {
   return (
     <Container>
       <ChannelMessage author="Cyhi" date="06/21/2026" content={<>Welcome to the Open Chat channel!</>} hasMention isBot avatar={cyhi} />
-
       <Messages ref={messagesRef}>
-        <ChannelMessage author="Leonardo Ronne" date="06/21/2026" content="hi guys, how r u?" avatar={leoronne} />
-        <ChannelMessage
-          author="Luiky"
-          date="06/21/2026"
-          content={(
-            <>
-              <Mention>@leoronne</Mention>
-              heyyyy
-            </>
-          )}
-          hasMention
-          avatar={user2}
-        />
-        {Array.from(Array(5).keys()).map((n) => (
-          <ChannelMessage key={n} author={users[Math.floor(Math.random() * users.length)]} date="06/21/2026" content={messages[Math.floor(Math.random() * messages.length)]} />
+        {messages.map((message) => (
+          <ChannelMessage
+            key={`${message.author}-${message.date}-${typeof message.content === 'string' ? message.content : 'mention'}`}
+            author={message.author}
+            date={message.date}
+            content={message.content}
+            hasMention={message.hasMention}
+            isBot={message.isBot}
+            avatar={message.avatar}
+          />
         ))}
-        <ChannelMessage author="Ronne12" date="06/21/2026" content="good morning guys" avatar={user4} />
-        <ChannelMessage
-          author={users[Math.floor(Math.random() * users.length)]}
-          date="06/21/2026"
-          hasMention
-          content={(
-            <>
-              <Mention>@leoronne</Mention> 
-              {messages[Math.floor(Math.random() * messages.length)]}
-            </>
-          )}
-        />
-        {Array.from(Array(5).keys()).map((n) => (
-          <ChannelMessage key={n} author={users[Math.floor(Math.random() * users.length)]} date="06/21/2026" content={messages[Math.floor(Math.random() * messages.length)]} />
-        ))}
-        <ChannelMessage
-          author={users[Math.floor(Math.random() * users.length)]}
-          date="06/21/2026"
-          hasMention
-          content={(
-            <>
-              <Mention>@leoronne</Mention> 
-              {messages[Math.floor(Math.random() * messages.length)]}
-            </>
-          )}
-        />
-        <ChannelMessage author="Rocket" date="06/21/2026" content={<>There are currently 4 online users and 17 offline!</>} isBot avatar={user5} />
       </Messages>
     </Container>
   );
