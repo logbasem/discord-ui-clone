@@ -6,11 +6,16 @@ import ChannelMessage from '../components/ChannelMessage';
 import { ChatMessage } from '../components/ChannelData';
 
 const PageContainer = styled.div`
-  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
   padding: 20px 24px 0;
   background-color: var(--primary);
   color: var(--white);
   position: relative;
+  height: 100%;
+  width: 100%;
 `;
 
 const Container = styled.div`
@@ -37,13 +42,23 @@ export const Title = styled.h1`
 `;
 
 const Messages = styled.div`
-  padding-top: 20px;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  margin: 0;
-  max-height: calc(100vh - 48px - 68px - 61px);
   overflow-y: auto;
+  min-height: 0;
+  padding-bottom: 10px;
+  
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--tertiary);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background-color: var(--secondary);
+  }
 `;
 
 export interface PrivateMessage {
