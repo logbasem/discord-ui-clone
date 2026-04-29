@@ -1,3 +1,9 @@
+export interface GroupChatMessage {
+  sender: string;
+  text: string;
+  timestamp: string;
+}
+
 export interface GroupChatData {
   id: string;
   name: string;
@@ -5,11 +11,7 @@ export interface GroupChatData {
   unread?: number;
   avatarColor: string;
   memberNames: string[];
-  messages: Array<{
-    sender: string;
-    text: string;
-    timestamp: string;
-  }>;
+  messages: Array<GroupChatMessage>;
 }
 
 const GROUP_COLORS = [
