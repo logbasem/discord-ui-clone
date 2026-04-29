@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { AlternateEmail } from 'styled-icons/material';
+import { AlternateEmail, Send } from 'styled-icons/material';
 
 export const InputWrapper = styled.div`
   width: 100%;
@@ -35,4 +35,33 @@ export const InputIcon = styled(AlternateEmail)`
   position: absolute;
   left: 32px;
   pointer-events: none;
+`;
+
+export const SendButton = styled.button`
+  position: absolute;
+  right: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: var(--gray);
+  transition: color 0.2s;
+
+  &:hover {
+    color: var(--white);
+  }
+
+  &:disabled {
+    color: var(--gray);
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+`;
+
+export const SendIcon = styled(Send)`
+  width: 20px;
+  height: 20px;
 `;

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { InputWrapper, Input, InputIcon } from './styles';
+import { InputWrapper, Input, InputIcon, SendButton, SendIcon } from './styles';
 
 interface Props {
   onSendMessage: (message: string) => void;
@@ -31,6 +31,9 @@ const MessageInput: React.FC<Props> = ({ onSendMessage }) => {
         onKeyPress={handleKeyPress}
       />
       <InputIcon />
+      <SendButton onClick={handleSend} disabled={!input.trim()} title="Send message">
+        <SendIcon />
+      </SendButton>
     </InputWrapper>
   );
 };
