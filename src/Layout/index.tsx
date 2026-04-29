@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Grid, Main, Sidebar, RightSidebarWrapper, TopBar, Footer, MessageInputContainer, CollapseButtonLeft, CollapseButtonRight } from './styles';
 import { ChannelData, ChannelInfo, UserInfo, RightSidebar, LeftSidebar, MessageInput, Navigation, ServerList, ServerDropdown } from '../components';
-import PrivateMessagesPage from '../pages/PrivateMessages';
+import PrivateMessagesPage, { PrivateMessage } from '../pages/PrivateMessages';
 import GroupChatsPage from '../pages/GroupChats';
 import { ServerData } from '../components/ServerList';
 import { privateUsers, UserProfileData } from '../data/userProfiles';
@@ -59,7 +59,7 @@ const fakeServer: ChatMessage[] = [
     hasMention: true,
     content: (
       <>
-        <Mention>@leoronne</Mention> 
+        <Mention>@leoronne</Mention>
         good, just coding some rocketseat&#39;s challenges
       </>
     ),
@@ -68,6 +68,22 @@ const fakeServer: ChatMessage[] = [
   { author: 'Lohaine', date: '06/21/2026', content: 'heyy, whats up?' },
   { author: 'Lika', date: '06/21/2026', content: 'whats gooooooood?!' },
   { author: 'Rocket', date: '06/21/2026', content: <>There are currently 4 online users and 17 offline!</>, isBot: true, avatar: user5 },
+];
+
+const fakePrivateMessages: PrivateMessage[] = [
+  { userId: 'log', content: 'Hiiiiiii!', date: '10/01/2026 - 10:00 AM' },
+  { userId: 'golddragon', content: 'hi, how r u?', date: '10/01/2026  - 10:01 AM' },
+  { userId: 'log', content: "I'm pretty good! I love private messages on Discord 2.0", date: '10/01/2026 - 10:02 AM' },
+  { userId: 'golddragon', content: 'what a coincidence I also love private messages on Discord 2.0', date: '10/01/2026 - 10:03 AM' },
+  { userId: 'golddragon', content: 'my favorite part is that the UI follows so many HCI principles', date: '10/01/2026 - 10:04 AM' },
+  { userId: 'log', content: "Omg YES I'm always saying this", date: '10/01/2026 - 10:05 AM' },
+  { userId: 'log', content: "I can't believe how intuitive and user-friendly the interface is", date: '10/01/2026 - 10:06 AM' },
+  { userId: 'golddragon', content: "same here, it's like they really understand how users interact with messaging apps", date: '10/01/2026 - 10:07 AM' },
+  { userId: 'log', content: 'Oh hey btw', date: '10/02/2026 - 7:00 PM' },
+  { userId: 'log', content: "What's your favorite color", date: '10/02/2026 - 7:09 PM' },
+  { userId: 'golddragon', content: 'blue', date: '10/02/2026 - 10:10 PM' },
+  { userId: 'golddragon', content: 'hbu', date: '10/02/2026 - 10:11 PM' },
+  { userId: 'log', content: 'Probably green', date: '10/02/2026 - 10:12 PM' },
 ];
 
 // Chevron icon pointing left (for "collapse left sidebar")
@@ -91,6 +107,7 @@ const Layout: React.FC = () => {
   const [showServerDropdown, setShowServerDropdown] = useState<boolean>(false);
   const [showSeeAll, setShowSeeAll] = useState<boolean>(false);
   const [serverChatFeed, setServerChatFeed] = useState<ChatMessage[]>(fakeServer);
+  const [privateChatFeed, setPrivateChatFeed] = useState<PrivateMessage[]>(fakePrivateMessages);
 
   const servers: ServerData[] = [
     { name: 'Ronne Dev Server', logo: Ronne, color: '#cc78a3', hasNotifications: true, mentions: 40, isHome: true },
@@ -131,39 +148,42 @@ const Layout: React.FC = () => {
   };
 
   const onSendMessage = (message: string) => {
-    // log message to console
     console.log('Sent message:', message);
 
-    // create ChatData object and add to serverChatFeed
-    const newMessage: ChatMessage = {
-      author: 'golddragon', // hardcoded for now;
+    const newMessage: ChatMessage | PrivateMessage = {
+      userId: activeNav === 'private' ? 'log' : '', // for private messages
+      author: activeNav === 'servers' ? 'log' : undefined, // for server messages
       date: 'Today',
       content: message,
-      avatar: privateUsers.find((u) => u.id === 'golddragon')?.avatar || '',
+      avatar: privateUsers.find((u) => u.id === 'log')?.avatar || '',
     };
 
-    // if message contains @ sign and matches a username, set hasMention to true and include Mention component in content
     const mentionRegex = /@(\w+)/;
     const mentionMatch = message.match(mentionRegex);
 
     if (mentionMatch) {
       const mentionedUser = privateUsers.find((user) => user.username === mentionMatch[1]);
       if (mentionedUser) {
-        newMessage.hasMention = true;
+        if (activeNav === 'servers') {
+          (newMessage as ChatMessage).hasMention = true;
+        }
         newMessage.content = (
           <>
             <Mention>
               @
-              {mentionedUser.username}
-              {' '}
-            </Mention> 
+              {mentionedUser.username} 
+            </Mention>
             {message.replace(mentionRegex, '').trim()}
           </>
         );
       }
     }
 
-    setServerChatFeed((prev) => [...prev, newMessage]);
+    if (activeNav === 'servers') {
+      setServerChatFeed((prev) => [...prev, newMessage as ChatMessage]);
+    } else if (activeNav === 'private') {
+      setPrivateChatFeed((prev) => [...prev, newMessage as PrivateMessage]);
+    }
   };
 
   const renderMainContent = () => {
@@ -187,7 +207,7 @@ const Layout: React.FC = () => {
     // Otherwise render based on activeNav
     switch (activeNav) {
       case 'private':
-        return <PrivateMessagesPage onUserSelect={setSelectedUser} selectedUser={selectedUser} />;
+        return <PrivateMessagesPage onUserSelect={setSelectedUser} selectedUser={selectedUser} messages={privateChatFeed} />;
       case 'groups':
         return <GroupChatsPage />;
       case 'servers':

@@ -68,28 +68,20 @@ const MessageWrapper = styled.div`
   }
 `;
 
+export interface PrivateMessage {
+  userId: string;
+  content: React.ReactNode;
+  date: string;
+  avatar?: string;
+}
+
 interface PrivateMessagesPageProps {
   selectedUser: UserProfileData | null;
   onUserSelect: (user: UserProfileData | null) => void;
+  messages: PrivateMessage[];
 }
 
-const chatFeed = [
-  { userId: 'log', text: 'Hiiiiiii!', date: '10/01/2026 - 10:00 AM' },
-  { userId: 'golddragon', text: 'hi, how r u?', date: '10/01/2026  - 10:01 AM' },
-  { userId: 'log', text: "I'm pretty good! I love private messages on Discord 2.0", date: '10/01/2026 - 10:02 AM' },
-  { userId: 'golddragon', text: 'what a coincidence I also love private messages on Discord 2.0', date: '10/01/2026 - 10:03 AM' },
-  { userId: 'golddragon', text: 'my favorite part is that the UI follows so many HCI principles', date: '10/01/2026 - 10:04 AM' },
-  { userId: 'log', text: "Omg YES I'm always saying this", date: '10/01/2026 - 10:05 AM' },
-  { userId: 'log', text: "I can't believe how intuitive and user-friendly the interface is", date: '10/01/2026 - 10:06 AM' },
-  { userId: 'golddragon', text: "same here, it's like they really understand how users interact with messaging apps", date: '10/01/2026 - 10:07 AM' },
-  { userId: 'log', text: 'Oh hey btw', date: '10/02/2026 - 7:00 PM' },
-  { userId: 'log', text: "What's your favorite color", date: '10/02/2026 - 7:09 PM' },
-  { userId: 'golddragon', text: 'blue', date: '10/02/2026 - 10:10 PM' },
-  { userId: 'golddragon', text: 'hbu', date: '10/02/2026 - 10:11 PM' },
-  { userId: 'log', text: 'Probably green', date: '10/02/2026 - 10:12 PM' },
-];
-
-const PrivateMessagesPage: React.FC<PrivateMessagesPageProps> = ({ selectedUser, onUserSelect }) => {
+const PrivateMessagesPage: React.FC<PrivateMessagesPageProps> = ({ selectedUser, onUserSelect, messages }) => {
   const popupRef = useRef<HTMLDivElement>(null);
   const messagesRef = useRef<HTMLDivElement>(null);
 
@@ -121,7 +113,7 @@ const PrivateMessagesPage: React.FC<PrivateMessagesPageProps> = ({ selectedUser,
     if (div) {
       div.scrollTop = div.scrollHeight;
     }
-  }, [chatFeed]);
+  }, [messages]);
 
   return (
     <>
@@ -131,12 +123,12 @@ const PrivateMessagesPage: React.FC<PrivateMessagesPageProps> = ({ selectedUser,
       </Container>
       <PageContainer>
         <Messages>
-          {chatFeed.map((item) => {
+          {messages.map((item) => {
             const user = privateUsers.find((entry) => entry.id === item.userId);
             if (!user) return null;
 
             return (
-              <MessageWrapper key={`${item.userId}-${item.text}`} onClick={() => onUserSelect(user)}>
+              <MessageWrapper key={`${item.userId}-${item.content}`} onClick={() => onUserSelect(user)}>
                 <ChannelMessage
                   author={(
                     <ClickableAuthor type="button" onClick={() => onUserSelect(user)}>
@@ -144,7 +136,7 @@ const PrivateMessagesPage: React.FC<PrivateMessagesPageProps> = ({ selectedUser,
                     </ClickableAuthor>
                   )}
                   date={item.date}
-                  content={item.text}
+                  content={item.content}
                   avatar={user.avatar}
                 />
               </MessageWrapper>
