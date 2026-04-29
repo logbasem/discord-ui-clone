@@ -2,7 +2,9 @@ import React, { useCallback, useEffect, useRef } from 'react';
 import { LeftSidebarStyled, ResizeHandle } from './styles';
 import ChannelList from '../ChannelList';
 import PrivateChatList from '../PrivateChatList';
-import Friends from '../FriendsButtons';
+import GroupChatList from '../GroupChatList';
+import CreateGroupModal from '../CreateGroupModal/index';
+import Friends from '../FriendsButtons/index';
 import LeftBarTitle from '../LeftBarTitle';
 
 interface LeftSidebarProps {
@@ -11,17 +13,40 @@ interface LeftSidebarProps {
   activeNav: string;
   selectedChannel?: string;
   onChannelSelect?: (channelName: string) => void;
+  selectedGroupId?: string | null;
+  onGroupSelect?: (groupId: string) => void;
+  dismissedUnreadByGroup?: Record<string, boolean>;
+  groupSearchTerm?: string;
+  pinnedGroupIds?: string[];
+  mutedGroupIds?: Record<string, boolean>;
+  onTogglePin?: (groupId: string) => boolean;
+  onToggleMute?: (groupId: string) => void;
 }
 
 const MIN_WIDTH = 150;
 const MAX_WIDTH = 400;
 const DEFAULT_WIDTH = 240;
 
-const LeftSidebar: React.FC<LeftSidebarProps> = ({ width, setWidth, activeNav, selectedChannel, onChannelSelect}) => {
+const LeftSidebar: React.FC<LeftSidebarProps> = ({
+  width,
+  setWidth,
+  activeNav,
+  selectedChannel,
+  onChannelSelect,
+  selectedGroupId,
+  onGroupSelect,
+  dismissedUnreadByGroup,
+  groupSearchTerm,
+  pinnedGroupIds,
+  mutedGroupIds,
+  onTogglePin,
+  onToggleMute,
+}) => {
   const cleanupRef = useRef<(() => void) | null>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const previousWidthRef = useRef<number>(DEFAULT_WIDTH);
   const widthRef = useRef<number>(width);
+  const [isCreateModalOpen, setCreateModalOpen] = React.useState(false);
 
   useEffect(() => {
     widthRef.current = width;
@@ -97,8 +122,27 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({ width, setWidth, activeNav, s
       case 'groups':
         return (
           <>
-            <LeftBarTitle name="Group Chats" hasAddNew />
-            <div>Group Chats stuff goes here</div>
+            <LeftBarTitle
+              name="Group Chats"
+              hasAddNew
+              onAddNewClick={() => setCreateModalOpen(true)}
+            />
+            <GroupChatList
+              selectedGroupId={selectedGroupId ?? null}
+              onGroupSelect={onGroupSelect || (() => undefined)}
+              dismissedUnreadByGroup={dismissedUnreadByGroup}
+              searchTerm={groupSearchTerm}
+              pinnedGroupIds={pinnedGroupIds}
+              mutedGroupIds={mutedGroupIds}
+              onTogglePin={onTogglePin}
+              onToggleMute={onToggleMute}
+            />
+            {isCreateModalOpen ? (
+              <CreateGroupModal
+                onClose={() => setCreateModalOpen(false)}
+                onCreated={(groupId: string) => onGroupSelect?.(groupId)}
+              />
+            ) : null}
           </>
         );
       default:

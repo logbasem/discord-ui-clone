@@ -20,10 +20,20 @@ const ChannelButton: React.FC<Props> = ({ channelName, selected, onClick }) => {
       </div>
 
       <div className={`channel-config${selected ? ' channel-active' : ''}`}>
-        <Tooltip title="Create Invite" placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+        <Tooltip
+          title="Create Invite"
+          placement="bottom"
+          arrow
+          classes={{ tooltip: classes.tooltip, arrow: classes.arrow, popper: classes.popper }}
+        >
           <InviteIcon />
         </Tooltip>
-        <Tooltip title="Channel Settings" placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+        <Tooltip
+          title="Channel Settings"
+          placement="bottom"
+          arrow
+          classes={{ tooltip: classes.tooltip, arrow: classes.arrow, popper: classes.popper }}
+        >
           <SettingsIcon />
         </Tooltip>
       </div>

@@ -6,10 +6,12 @@ export const LeftSidebarStyled = styled.div<{ $width: number }>`
   width: ${({ $width }) => `${$width}px`};
   background: #fafafa;
   overflow-y: auto;
+  overflow-x: visible;
   position: relative;
   border-right: 1px solid #e0e0e0;
   position: relative;
   z-index: 5;
+  font-family: 'DM Sans', var(--font-family);
 
   /* Stack on mobile */
   @media (max-width: 597px) {
