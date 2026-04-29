@@ -6,6 +6,7 @@ export const Container = styled.div`
   flex-direction: column;
   justify-content: space-between;
   background-color: var(--primary);
+  overflow-y: hidden;
 `;
 
 export const Messages = styled.div`

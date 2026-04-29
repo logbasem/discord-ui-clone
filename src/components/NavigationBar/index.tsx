@@ -190,7 +190,7 @@ const Navigation: React.FC<NavigationProps> = ({ activeNav, onChange }) => {
               <ProfilePopupHeader>
                 <ProfilePopupAvatar src={avatar} alt="Profile" />
                 <ProfilePopupUserInfo>
-                  <ProfilePopupUserName>Leonardo Ronne</ProfilePopupUserName>
+                  <ProfilePopupUserName>GoldDragon</ProfilePopupUserName>
                   <ProfilePopupUserStatus>Online</ProfilePopupUserStatus>
                 </ProfilePopupUserInfo>
               </ProfilePopupHeader>
