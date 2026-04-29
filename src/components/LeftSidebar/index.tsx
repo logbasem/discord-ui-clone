@@ -3,8 +3,8 @@ import { LeftSidebarStyled, ResizeHandle } from './styles';
 import ChannelList from '../ChannelList';
 import PrivateChatList from '../PrivateChatList';
 import GroupChatList from '../GroupChatList';
-import CreateGroupModal from '../CreateGroupModal';
-import Friends from '../FriendsButtons';
+import CreateGroupModal from '../CreateGroupModal/index';
+import Friends from '../FriendsButtons/index';
 import LeftBarTitle from '../LeftBarTitle';
 
 interface LeftSidebarProps {
@@ -140,7 +140,7 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({
             {isCreateModalOpen ? (
               <CreateGroupModal
                 onClose={() => setCreateModalOpen(false)}
-                onCreated={(groupId) => onGroupSelect?.(groupId)}
+                onCreated={(groupId: string) => onGroupSelect?.(groupId)}
               />
             ) : null}
           </>

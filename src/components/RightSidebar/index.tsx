@@ -5,7 +5,6 @@ import UserList from '../UserList';
 import { UserProfileData, privateUsers } from '../../data/userProfiles';
 import UserProfilePopup from '../UserProfilePopup';
 import { mockUsers, MockUser } from '../../data/mockUsers';
-import { groupChats } from '../../data/groupChats';
 import { Container, Role, User, Avatar } from '../UserList/styles';
 
 import bazinga from '~/assets/img/thukuna.jpg';
@@ -166,11 +165,7 @@ const RightSidebar: React.FC<Props> = ({
     setPopupUser(user);
   };
 
-  const activeGroup = groupChats.find((group) => group.id === selectedGroupId);
-  const groupMembers = activeGroup
-    ? mockUsers.filter((user) => activeGroup.memberNames.includes(user.name))
-    : [];
-  const sidebarUsers = activeNav === 'groups' ? groupMembers : mockUsers;
+  const sidebarUsers = activeNav === 'groups' ? mockUsers : mockUsers;
   const onlineUsers = sidebarUsers.filter((user) => user.status === 'online');
   const offlineUsers = sidebarUsers.filter((user) => user.status === 'offline');
 
@@ -216,6 +211,24 @@ const RightSidebar: React.FC<Props> = ({
     );
   };
 
+  const handleServerSidebarUserClick = (
+    nickname: string,
+    event: React.MouseEvent<HTMLDivElement>
+  ) => {
+    const matched = mockUsers.find((user) => user.name === nickname);
+    const fallback: MockUser = {
+      id: `unknown-${nickname.toLowerCase().replace(/\s+/g, '-')}`,
+      name: nickname,
+      nickname,
+      pronouns: 'Unknown',
+      description: 'No profile details yet.',
+      mutualFriends: 0,
+      mutualServers: 0,
+      status: 'offline',
+    };
+    openPopupForUser(matched || fallback, event);
+  };
+
   let sidebarContent = (
     <Container>
       <Role>
@@ -236,7 +249,7 @@ const RightSidebar: React.FC<Props> = ({
   if (activeNav === 'private') {
     sidebarContent = <UserProfile user={selectedUser} mode="sidebar" />;
   } else if (activeNav === 'servers') {
-    sidebarContent = <UserList />;
+    sidebarContent = <UserList onUserClick={handleServerSidebarUserClick} />;
   }
 
   return (

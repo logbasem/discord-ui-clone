@@ -19,19 +19,39 @@ const tooltipCss = `
   &::after {
     content: attr(data-tooltip);
     position: absolute;
-    left: 58px;
-    top: 50%;
-    transform: translateY(-50%);
-    padding: 5px 8px;
-    border-radius: 4px;
+    left: 50%;
+    bottom: calc(100% + 6px);
+    transform: translateX(-50%);
+    padding: 6px 10px;
+    border-radius: 6px;
     color: var(--white);
-    background: var(--secondary);
+    background: #18191C;
     white-space: nowrap;
     font-size: 12px;
+    font-family: 'DM Sans', var(--font-family);
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.12s ease;
-    z-index: 20;
+    transition: opacity 0.15s ease;
+    z-index: 1000;
+  }
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 1px);
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #18191C;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    z-index: 1000;
+    pointer-events: none;
+  }
+  &:hover::before {
+    opacity: 1;
   }
   &:hover::after {
     opacity: 1;
@@ -54,6 +74,20 @@ export const ServerIcon = styled.img`
   height: 46px;
   border-radius: 50%;
   object-fit: cover;
+`;
+
+export const ServerInitials = styled.div<{ $color: string }>`
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: ${({ $color }) => $color};
+  color: var(--white);
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
 `;
 
 export const HomeButton = styled.button<{ $active?: boolean }>`

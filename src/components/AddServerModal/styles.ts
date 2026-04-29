@@ -3,19 +3,19 @@ import styled from 'styled-components';
 export const Overlay = styled.div`
   position: fixed;
   inset: 0;
-  z-index: 200;
+  z-index: 250;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.6);
 `;
 
 export const ModalCard = styled.div`
   width: 100%;
   max-width: 520px;
+  border-radius: 10px;
   padding: 16px;
-  border-radius: 8px;
-  background-color: var(--secondary);
+  background: var(--secondary);
   color: var(--white);
 `;
 
@@ -27,9 +27,27 @@ export const Header = styled.div`
 `;
 
 export const Title = styled.h2`
-  font-size: 16px;
-  font-weight: 600;
   margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+`;
+
+export const CloseButton = styled.button`
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: var(--tertiary);
+  color: var(--white);
+  font-size: 14px;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--quinary);
+  }
+`;
+
+export const Section = styled.div`
+  margin-bottom: 12px;
 `;
 
 export const Label = styled.label`
@@ -38,7 +56,6 @@ export const Label = styled.label`
   color: var(--gray);
   font-size: 12px;
   text-transform: uppercase;
-  letter-spacing: 0.02em;
 `;
 
 export const Input = styled.input`
@@ -51,22 +68,56 @@ export const Input = styled.input`
   font-size: 14px;
 `;
 
-export const Muted = styled.div`
-  color: var(--gray);
-  font-size: 13px;
+export const IconPickerWrap = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
 `;
 
-export const Section = styled.div`
-  margin-bottom: 12px;
+export const IconPreview = styled.div<{ $color: string }>`
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: ${({ $color }) => $color};
+  color: var(--white);
+  font-size: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+`;
+
+export const UploadButton = styled.label`
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 6px;
+  background: var(--tertiary);
+  color: var(--white);
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 13px;
+
+  &:hover {
+    background: var(--quinary);
+  }
+
+  input {
+    display: none;
+  }
 `;
 
 export const SearchWrap = styled.div`
-  position: relative;
-`;
-
-export const SearchDropdown = styled.div`
   margin-top: 8px;
-  max-height: 180px;
+  max-height: 170px;
   overflow-y: auto;
   border-radius: 8px;
   background: var(--tertiary);
@@ -75,18 +126,17 @@ export const SearchDropdown = styled.div`
 
 export const ResultRow = styled.button`
   width: 100%;
+  border-radius: 6px;
   background: transparent;
   color: var(--white);
-  border-radius: 6px;
-  padding: 8px;
   display: flex;
   align-items: center;
   text-align: left;
+  padding: 8px;
   cursor: pointer;
-  transition: background-color 0.15s ease;
 
   &:hover {
-    background-color: var(--quinary);
+    background: var(--quinary);
   }
 `;
 
@@ -96,28 +146,17 @@ export const Avatar = styled.div`
   border-radius: 50%;
   background: var(--discord);
   color: var(--white);
-  font-size: 11px;
-  font-weight: 700;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
   text-transform: uppercase;
 `;
 
-export const ResultMeta = styled.div`
-  margin-left: 8px;
-  min-width: 0;
-`;
-
 export const Name = styled.div`
-  color: var(--white);
+  margin-left: 8px;
   font-size: 14px;
-  font-weight: 500;
-`;
-
-export const Pronouns = styled.div`
-  color: var(--gray);
-  font-size: 12px;
 `;
 
 export const Chips = styled.div`
@@ -150,10 +189,6 @@ export const Footer = styled.div`
   margin-top: 14px;
   display: flex;
   justify-content: flex-end;
-`;
-
-export const Buttons = styled.div`
-  display: inline-flex;
   gap: 8px;
 `;
 
@@ -164,10 +199,6 @@ export const CancelButton = styled.button`
   background: var(--tertiary);
   color: var(--white);
   cursor: pointer;
-
-  &:hover {
-    background: var(--quinary);
-  }
 `;
 
 export const CreateButton = styled.button`
@@ -185,17 +216,7 @@ export const CreateButton = styled.button`
   }
 `;
 
-export const CloseButton = styled.button`
-  width: 28px;
-  height: 28px;
-  background-color: var(--tertiary);
-  color: var(--white);
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 15px;
-  line-height: 1;
-
-  &:hover {
-    background-color: var(--quinary);
-  }
+export const Muted = styled.div`
+  color: var(--gray);
+  font-size: 13px;
 `;

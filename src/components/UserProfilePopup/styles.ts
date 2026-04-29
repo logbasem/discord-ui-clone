@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const Overlay = styled.div`
   position: fixed;
   inset: 0;
-  z-index: 35;
+  z-index: 100;
 `;
 
 export const PopupCard = styled.div`
@@ -14,7 +14,7 @@ export const PopupCard = styled.div`
   color: var(--white);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
   overflow: hidden;
-  z-index: 36;
+  z-index: 101;
 `;
 
 export const Banner = styled.div<{ $color: string }>`

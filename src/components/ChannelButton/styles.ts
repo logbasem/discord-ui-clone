@@ -11,6 +11,7 @@ export const Container = styled.div`
   border-radius: 5px;
   background-color: transparent;
   transition: background-color 0.2s;
+  font-family: 'DM Sans', var(--font-family);
 
   margin-top: 2px;
   > div {
@@ -20,6 +21,7 @@ export const Container = styled.div`
   > div span {
     margin-left: 5px;
     color: var(--senary);
+    font-family: 'DM Sans', var(--font-family);
   }
   &:hover,
   &.active {

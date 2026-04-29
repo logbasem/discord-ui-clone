@@ -5,7 +5,7 @@ import ChannelMessage from '../ChannelMessage';
 import { Container, Messages, EmptyChannel, EmptyChannelIcon, EmptyChannelText } from './styles';
 
 export interface ChatMessage {
-  author: string;
+  author: React.ReactNode;
   date: string;
   content: React.ReactNode;
   hasMention?: boolean;
@@ -16,9 +16,10 @@ export interface ChatMessage {
 export interface Props {
   channelName: string;
   messages: ChatMessage[];
+  onAuthorClick?: (author: string, event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-const ChannelData: React.FC<Props> = ({ channelName, messages }) => {
+const ChannelData: React.FC<Props> = ({ channelName, messages, onAuthorClick }) => {
   const messagesRef = useRef() as React.MutableRefObject<HTMLDivElement>;
 
   useEffect(() => {
@@ -43,21 +44,48 @@ const ChannelData: React.FC<Props> = ({ channelName, messages }) => {
     );
   }
 
+  const combinedMessages: ChatMessage[] = [
+    {
+      author: 'Cyhi',
+      date: '06/21/2026',
+      content: <>Welcome to the Open Chat channel!</>,
+      hasMention: true,
+      isBot: true,
+      avatar: cyhi,
+    },
+    ...messages,
+  ];
+
   return (
     <Container>
-      <ChannelMessage author="Cyhi" date="06/21/2026" content={<>Welcome to the Open Chat channel!</>} hasMention isBot avatar={cyhi} />
       <Messages ref={messagesRef}>
-        {messages.map((message) => (
-          <ChannelMessage
-            key={`${message.author}-${message.date}-${typeof message.content === 'string' ? message.content : 'mention'}`}
-            author={message.author}
-            date={message.date}
-            content={message.content}
-            hasMention={message.hasMention}
-            isBot={message.isBot}
-            avatar={message.avatar}
-          />
-        ))}
+        {combinedMessages.map((message) => {
+          const stringAuthor = typeof message.author === 'string' ? message.author : null;
+          const contentKey = typeof message.content === 'string' ? message.content : 'rich-content';
+          const renderedAuthor = onAuthorClick && stringAuthor ? (
+            <button
+              type="button"
+              className="author-link"
+              onClick={(event) => onAuthorClick(stringAuthor, event)}
+            >
+              {stringAuthor}
+            </button>
+          ) : (
+            message.author
+          );
+
+          return (
+            <ChannelMessage
+              key={`${message.date}-${stringAuthor || 'unknown'}-${contentKey}`}
+              author={renderedAuthor}
+              date={message.date}
+              content={message.content}
+              hasMention={message.hasMention}
+              isBot={message.isBot}
+              avatar={message.avatar}
+            />
+          );
+        })}
       </Messages>
     </Container>
   );

@@ -10,7 +10,7 @@ export const Container = styled.div`
 `;
 
 export const Messages = styled.div`
-  padding: 20px 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
   max-height: calc(100vh - 48px - 68px - 61px);

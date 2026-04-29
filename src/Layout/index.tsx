@@ -4,8 +4,11 @@ import { Grid, Main, Sidebar, ServerRailWrapper, RightSidebarWrapper, TopBar, Fo
 import { ChannelData, ChannelInfo, UserInfo, RightSidebar, LeftSidebar, MessageInput, Navigation, ServerList, ServerDropdown } from '../components';
 import PrivateMessagesPage from '../pages/PrivateMessages';
 import GroupChatsPage from '../pages/GroupChats';
+import UserProfilePopup from '../components/UserProfilePopup';
+import AddServerModal from '../components/AddServerModal';
 import { ServerData } from '../components/ServerList';
 import { privateUsers, UserProfileData } from '../data/userProfiles';
+import { mockUsers, MockUser } from '../data/mockUsers';
 import { ChatMessage } from '../components/ChannelData';
 import { Mention } from '../components/ChannelMessage';
 import leoronne from '~/assets/img/avatar.jpg';
@@ -95,16 +98,15 @@ const Layout: React.FC = () => {
   const [showServerDropdown, setShowServerDropdown] = useState<boolean>(false);
   const [showSeeAll, setShowSeeAll] = useState<boolean>(false);
   const [serverChatFeed, setServerChatFeed] = useState<ChatMessage[]>(fakeServer);
-
-  const servers: ServerData[] = [
+  const [servers, setServers] = useState<ServerData[]>([
     { name: 'Ronne Dev Server', logo: Ronne, color: '#cc78a3', hasNotifications: true, mentions: 40, isHome: true },
     { name: 'LGBTQIA+ Pride', logo: Pride, color: '#fff', hasNotifications: true, mentions: 11 },
     { name: 'RocketSeat', logo: RocketSeat, color: '#6633cc', hasNotifications: true, mentions: 40 },
     { name: 'Code', logo: Code, color: '#A598BE', hasNotifications: true, mentions: 7 },
     { name: 'Node.js', logo: NodeJS, color: '#83cd29', mentions: 32 },
-  ];
+  ]);
 
-  const recentServers = servers.slice(0, 5); // Show 3 most recent
+  const recentServers = servers.slice(0, 5);
 
   const [leftWidth, setLeftWidth] = useState<number>(240);
   const [rightWidth, setRightWidth] = useState<number>(240);
@@ -112,13 +114,21 @@ const Layout: React.FC = () => {
   const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
   const [dismissedUnreadByGroup, setDismissedUnreadByGroup] = useState<Record<string, boolean>>({});
   const [groupSearchTerm, setGroupSearchTerm] = useState('');
+  const [pinnedGroupIds, setPinnedGroupIds] = useState<string[]>([]);
+  const [mutedGroupIds, setMutedGroupIds] = useState<Record<string, boolean>>({});
   const [highlightedUser, setHighlightedUser] = useState<string | null>(null);
+  const [popupUser, setPopupUser] = useState<MockUser | null>(null);
+  const [popupPosition, setPopupPosition] = useState({ top: 120, left: 120 });
+  const [isAddServerModalOpen, setAddServerModalOpen] = useState(false);
   const leftCollapsed = leftWidth === 0;
   const rightCollapsed = rightWidth === 0;
   
   const handleServerClick = (serverName: string) => {
     if (serverName === 'See All') {
       setShowSeeAll(true);
+      setShowServerDropdown(false);
+    } else if (serverName === 'Add New') {
+      setAddServerModalOpen(true);
       setShowServerDropdown(false);
     } else {
       setSelectedServer(serverName);
@@ -184,6 +194,48 @@ const Layout: React.FC = () => {
 
   const handleGroupBack = () => setSelectedGroupId(null);
 
+  const handleTogglePinGroup = (groupId: string): boolean => {
+    let wasAllowed = true;
+    setPinnedGroupIds((current) => {
+      if (current.includes(groupId)) {
+        return current.filter((id) => id !== groupId);
+      }
+      if (current.length >= 3) {
+        wasAllowed = false;
+        return current;
+      }
+      return [...current, groupId];
+    });
+    return wasAllowed;
+  };
+
+  const handleToggleMuteGroup = (groupId: string) => {
+    setMutedGroupIds((current) => ({ ...current, [groupId]: !current[groupId] }));
+  };
+
+  const handleServerAuthorClick = (
+    authorName: string,
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    const matched = mockUsers.find((user) => user.name === authorName);
+    const fallback: MockUser = {
+      id: `unknown-${authorName.toLowerCase().replace(/\s+/g, '-')}`,
+      name: authorName,
+      nickname: authorName,
+      pronouns: 'Unknown',
+      description: 'No profile details yet.',
+      mutualFriends: 0,
+      mutualServers: 0,
+      status: 'offline',
+    };
+    const targetUser = matched || fallback;
+    const rect = event.currentTarget.getBoundingClientRect();
+    const top = Math.min(Math.max(8, rect.top - 40), Math.max(8, window.innerHeight - 420 - 8));
+    const left = Math.min(rect.right + 12, Math.max(8, window.innerWidth - 300 - 8));
+    setPopupPosition({ top, left });
+    setPopupUser(targetUser);
+  };
+
   const renderMainContent = () => {
     // If see-all is open, show server list
     if (showSeeAll) {
@@ -197,7 +249,8 @@ const Layout: React.FC = () => {
             setShowSeeAll(false);
           }}
           selectedServer={selectedServer}
-          mostRecentServers={recentServers.map((s) => s.name) || ''}
+          allServers={servers}
+          onAddServerClick={() => setAddServerModalOpen(true)}
         />
       );
     }
@@ -221,7 +274,11 @@ const Layout: React.FC = () => {
           return (
             <>
               <ChannelInfo channelName={selectedChannel} />
-              <ChannelData channelName={selectedChannel} messages={serverChatFeed} />
+              <ChannelData
+                channelName={selectedChannel}
+                messages={serverChatFeed}
+                onAuthorClick={handleServerAuthorClick}
+              />
             </>
           );
         }
@@ -235,7 +292,11 @@ const Layout: React.FC = () => {
         return (
           <>
             <ChannelInfo channelName={selectedChannel} />
-            <ChannelData channelName={selectedChannel} messages={serverChatFeed} />
+            <ChannelData
+              channelName={selectedChannel}
+              messages={serverChatFeed}
+              onAuthorClick={handleServerAuthorClick}
+            />
           </>
         );
     }
@@ -255,7 +316,8 @@ const Layout: React.FC = () => {
         <ServerList
           onServerClick={handleServerClick}
           selectedServer={selectedServer}
-          mostRecentServers={recentServers.map((server) => server.name)}
+          allServers={servers}
+          onAddServerClick={() => setAddServerModalOpen(true)}
         />
       </ServerRailWrapper>
 
@@ -271,6 +333,10 @@ const Layout: React.FC = () => {
           onGroupSelect={handleGroupSelect}
           dismissedUnreadByGroup={dismissedUnreadByGroup}
           groupSearchTerm={groupSearchTerm}
+          pinnedGroupIds={pinnedGroupIds}
+          mutedGroupIds={mutedGroupIds}
+          onTogglePin={handleTogglePinGroup}
+          onToggleMute={handleToggleMuteGroup}
         />
       </Sidebar>
 
@@ -319,6 +385,23 @@ const Layout: React.FC = () => {
       <Footer $leftCollapsed={leftCollapsed}>
         <UserInfo />
       </Footer>
+      {popupUser ? (
+        <UserProfilePopup
+          user={popupUser}
+          position={popupPosition}
+          onClose={() => setPopupUser(null)}
+          onMessageUser={() => setPopupUser(null)}
+        />
+      ) : null}
+      {isAddServerModalOpen ? (
+        <AddServerModal
+          onClose={() => setAddServerModalOpen(false)}
+          onCreate={(server) => {
+            setServers((current) => [...current, server]);
+            setSelectedServer(server.name);
+          }}
+        />
+      ) : null}
     </Grid>
   );
 };

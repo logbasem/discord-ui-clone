@@ -188,14 +188,15 @@ const ClickableAuthor = styled.button`
   background: none;
   border: 0;
   padding: 0;
-  color: var(--gray);
+  color: var(--white);
   font: inherit;
   cursor: pointer;
-  transition: color 0.15s ease;
+  transition: text-decoration-color 0.15s ease;
+  text-decoration: underline;
+  text-decoration-color: transparent;
 
   &:hover {
-    color: var(--white);
-    text-decoration: underline;
+    text-decoration-color: var(--white);
   }
 `;
 
