@@ -90,6 +90,7 @@ export const CollapseButtonLeft = styled.button<{ $collapsed: boolean; $leftWidt
   cursor: pointer;
   border: 1px solid rgba(255, 255, 255, 0.3);
   transition: left 0.25s ease, color 0.15s ease, background-color 0.15s ease;
+  z-index: 60;
 
   &:hover {
     background-color: var(--quinary);
@@ -118,6 +119,7 @@ export const CollapseButtonRight = styled.button<{ $collapsed: boolean; $rightWi
   cursor: pointer;
   border: 1px solid rgba(255, 255, 255, 0.3);
   transition: right 0.25s ease, color 0.15s ease, background-color 0.15s ease;
+  z-index: 60;
 
   &:hover {
     background-color: var(--quinary);
