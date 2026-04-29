@@ -29,13 +29,13 @@ const ChevronRight = () => (
 
 const Layout: React.FC = () => {
   const [activeNav, setActiveNav] = useState<string>('servers');
-  const [selectedServer, setSelectedServer] = useState<string | null>('Ronne Dev Server');
+  const [selectedServer, setSelectedServer] = useState<string | null>('HCI Test Server');
   const [selectedChannel, setSelectedChannel] = useState<string>('open-chat');
   const [showServerDropdown, setShowServerDropdown] = useState<boolean>(false);
   const [showSeeAll, setShowSeeAll] = useState<boolean>(false);
 
   const servers: ServerData[] = [
-    { name: 'Ronne Dev Server', logo: Ronne, color: '#cc78a3', hasNotifications: true, mentions: 40, isHome: true },
+    { name: 'HCI Test Server', logo: Ronne, color: '#cc78a3', hasNotifications: true, mentions: 40, isHome: true },
     { name: 'LGBTQIA+ Pride', logo: Pride, color: '#fff', hasNotifications: true, mentions: 11 },
     { name: 'RocketSeat', logo: RocketSeat, color: '#6633cc', hasNotifications: true, mentions: 40 },
     { name: 'Code', logo: Code, color: '#A598BE', hasNotifications: true, mentions: 7 },
@@ -97,7 +97,7 @@ const Layout: React.FC = () => {
       case 'groups':
         return <GroupChatsPage />;
       case 'servers':
-        if (selectedServer === 'Ronne Dev Server') {
+        if (selectedServer === 'HCI Test Server') {
           return (
             <>
               <ChannelInfo channelName={selectedChannel} />

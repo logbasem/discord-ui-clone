@@ -33,7 +33,7 @@ interface Props {
 
 const ServerList: React.FC<Props> = ({ onServerClick, selectedServer, mostRecentServers }) => {
   const allServersData: ServerData[] = [
-    { name: 'Ronne Dev Server', logo: Ronne, color: '#cc78a3', hasNotifications: true, mentions: 40, isHome: true },
+    { name: 'HCI Test Server', logo: Ronne, color: '#cc78a3', hasNotifications: true, mentions: 40, isHome: true },
     { name: 'LGBTQIA+ Pride', logo: Pride, color: '#fff', hasNotifications: true, mentions: 11 },
     { name: 'RocketSeat', logo: RocketSeat, color: '#6633cc', hasNotifications: true, mentions: 40 },
     { name: 'Code', logo: Code, color: '#A598BE', hasNotifications: true, mentions: 7 },

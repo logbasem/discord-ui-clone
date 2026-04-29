@@ -181,16 +181,16 @@ const Navigation: React.FC<NavigationProps> = ({ activeNav, onChange }) => {
       <RightSection>
         <div style={{ position: 'relative' }} ref={profilePopupRef}>
           <ProfileButton onClick={handleProfileClick} title="Profile">
-            <ProfileAvatar src={avatar} alt="Profile" />
+            <ProfileAvatar src={avatar2} alt="Profile" />
             <ProfileStatusDot />
           </ProfileButton>
           
           {showProfilePopup && (
             <ProfilePopup>
               <ProfilePopupHeader>
-                <ProfilePopupAvatar src={avatar} alt="Profile" />
+                <ProfilePopupAvatar src={avatar2} alt="Profile" />
                 <ProfilePopupUserInfo>
-                  <ProfilePopupUserName>Leonardo Ronne</ProfilePopupUserName>
+                  <ProfilePopupUserName>Log</ProfilePopupUserName>
                   <ProfilePopupUserStatus>Online</ProfilePopupUserStatus>
                 </ProfilePopupUserInfo>
               </ProfilePopupHeader>
