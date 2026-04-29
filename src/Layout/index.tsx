@@ -77,14 +77,10 @@ const fakeServer: ChatMessage[] = [
     hasMention: true,
     content: (
       <>
-<<<<<<< HEAD
-        <Mention>@leoronne</Mention>
-=======
         <Mention>
           @leoronne
           {' '}
         </Mention>
->>>>>>> origin/master
         good, just coding some rocketseat&#39;s challenges
       </>
     ),
@@ -95,7 +91,6 @@ const fakeServer: ChatMessage[] = [
   { author: 'Rocket', date: '06/21/2026', content: <>There are currently 4 online users and 17 offline!</>, isBot: true, avatar: user5 },
 ];
 
-<<<<<<< HEAD
 const fakePrivateMessages: PrivateMessage[] = [
   { userId: 'log', content: 'Hiiiiiii!', date: '10/01/2026 - 10:00 AM' },
   { userId: 'golddragon', content: 'hi, how r u?', date: '10/01/2026  - 10:01 AM' },
@@ -112,22 +107,6 @@ const fakePrivateMessages: PrivateMessage[] = [
   { userId: 'log', content: 'Probably green', date: '10/02/2026 - 10:12 PM' },
 ];
 
-// Chevron icon pointing left (for "collapse left sidebar")
-const ChevronLeft = () => (
-  <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
-  </svg>
-);
-
-// Chevron icon pointing right (for "collapse right sidebar")
-const ChevronRight = () => (
-  <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
-  </svg>
-);
-
-=======
->>>>>>> origin/master
 const Layout: React.FC = () => {
   const [activeNav, setActiveNav] = useState<string>('servers');
   const [selectedServer, setSelectedServer] = useState<string | null>('Ronne Dev Server');
@@ -135,13 +114,9 @@ const Layout: React.FC = () => {
   const [showServerDropdown, setShowServerDropdown] = useState<boolean>(false);
   const [showSeeAll, setShowSeeAll] = useState<boolean>(false);
   const [serverChatFeed, setServerChatFeed] = useState<ChatMessage[]>(fakeServer);
-<<<<<<< HEAD
   const [privateChatFeed, setPrivateChatFeed] = useState<PrivateMessage[]>(fakePrivateMessages);
 
-  const servers: ServerData[] = [
-=======
   const [servers, setServers] = useState<ServerData[]>([
->>>>>>> origin/master
     { name: 'Ronne Dev Server', logo: Ronne, color: '#cc78a3', hasNotifications: true, mentions: 40, isHome: true },
     { name: 'LGBTQIA+ Pride', logo: Pride, color: '#fff', hasNotifications: true, mentions: 11 },
     { name: 'RocketSeat', logo: RocketSeat, color: '#6633cc', hasNotifications: true, mentions: 40 },
@@ -191,14 +166,6 @@ const Layout: React.FC = () => {
     }
   };
 
-<<<<<<< HEAD
-  const onSendMessage = (message: string) => {
-    console.log('Sent message:', message);
-
-    const newMessage: ChatMessage | PrivateMessage = {
-      userId: activeNav === 'private' ? 'log' : '', // for private messages
-      author: activeNav === 'servers' ? 'log' : undefined, // for server messages
-=======
   const handleOpenPrivateMessage = (user: UserProfileData) => {
     setSelectedUser(user);
     setActiveNav('private');
@@ -206,10 +173,12 @@ const Layout: React.FC = () => {
     setShowSeeAll(false);
   };
 
-  const handleSendMessage = (message: string) => {
-    const newMessage: ChatMessage = {
-      author: 'golddragon',
->>>>>>> origin/master
+  const onSendMessage = (message: string) => {
+    console.log('Sent message:', message);
+
+    const newMessage: ChatMessage | PrivateMessage = {
+      userId: activeNav === 'private' ? 'log' : '', // for private messages
+      author: activeNav === 'servers' ? 'log' : undefined, // for server messages
       date: 'Today',
       content: message,
       avatar: privateUsers.find((u) => u.id === 'log')?.avatar || '',
@@ -228,12 +197,8 @@ const Layout: React.FC = () => {
           <>
             <Mention>
               @
-<<<<<<< HEAD
               {mentionedUser.username} 
-=======
-              {mentionedUser.username}
               {' '}
->>>>>>> origin/master
             </Mention>
             {message.replace(mentionRegex, '').trim()}
           </>
@@ -441,7 +406,7 @@ const Layout: React.FC = () => {
       </RightSidebarWrapper>
 
       <MessageInputContainer>
-        <MessageInput onSendMessage={handleSendMessage} />
+        <MessageInput onSendMessage={onSendMessage} />
       </MessageInputContainer>
 
       <Footer $leftCollapsed={leftCollapsed}>
