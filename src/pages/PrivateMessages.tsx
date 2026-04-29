@@ -2,7 +2,9 @@ import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { Send } from 'styled-icons/material';
 import { privateUsers, UserProfileData } from '../data/userProfiles';
+import { mockUsers, MockUser } from '../data/mockUsers';
 import ChannelMessage from '../components/ChannelMessage';
+import UserProfilePopup from '../components/UserProfilePopup';
 
 const PageContainer = styled.div`
   min-height: 100%;
@@ -51,9 +53,12 @@ const ClickableAuthor = styled.button`
   font-weight: 600;
   cursor: pointer;
   text-align: left;
+  transition: text-decoration-color 0.15s ease;
+  text-decoration: underline;
+  text-decoration-color: transparent;
 
   &:hover {
-    text-decoration: underline;
+    text-decoration-color: var(--white);
   }
 `;
 
@@ -92,6 +97,8 @@ const chatFeed = [
 const PrivateMessagesPage: React.FC<PrivateMessagesPageProps> = ({ selectedUser, onUserSelect }) => {
   const popupRef = useRef<HTMLDivElement>(null);
   const messagesRef = useRef<HTMLDivElement>(null);
+  const [popupUser, setPopupUser] = React.useState<MockUser | null>(null);
+  const [popupPosition, setPopupPosition] = React.useState({ top: 120, left: 120 });
 
   // Automatically display the chat partner's profile in the right sidebar
   useEffect(() => {
@@ -123,6 +130,28 @@ const PrivateMessagesPage: React.FC<PrivateMessagesPageProps> = ({ selectedUser,
     }
   }, [chatFeed]);
 
+  const openProfilePopup = (
+    username: string,
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    const matched = mockUsers.find((user) => user.name === username);
+    const fallback: MockUser = {
+      id: `unknown-${username.toLowerCase().replace(/\s+/g, '-')}`,
+      name: username,
+      nickname: username,
+      pronouns: 'Unknown',
+      description: 'No profile details yet.',
+      mutualFriends: 0,
+      mutualServers: 0,
+      status: 'offline',
+    };
+    const rect = event.currentTarget.getBoundingClientRect();
+    const top = Math.min(Math.max(8, rect.top - 40), Math.max(8, window.innerHeight - 420 - 8));
+    const left = Math.min(rect.right + 12, Math.max(8, window.innerWidth - 300 - 8));
+    setPopupPosition({ top, left });
+    setPopupUser(matched || fallback);
+  };
+
   return (
     <>
       <Container>
@@ -136,10 +165,10 @@ const PrivateMessagesPage: React.FC<PrivateMessagesPageProps> = ({ selectedUser,
             if (!user) return null;
 
             return (
-              <MessageWrapper key={`${item.userId}-${item.text}`} onClick={() => onUserSelect(user)}>
+              <MessageWrapper key={`${item.userId}-${item.text}`}>
                 <ChannelMessage
                   author={(
-                    <ClickableAuthor type="button" onClick={() => onUserSelect(user)}>
+                    <ClickableAuthor type="button" onClick={(event) => openProfilePopup(user.username, event)}>
                       {user.username}
                     </ClickableAuthor>
                   )}
@@ -152,6 +181,14 @@ const PrivateMessagesPage: React.FC<PrivateMessagesPageProps> = ({ selectedUser,
           })}
         </Messages>
       </PageContainer>
+      {popupUser ? (
+        <UserProfilePopup
+          user={popupUser}
+          position={popupPosition}
+          onClose={() => setPopupUser(null)}
+          onMessageUser={() => setPopupUser(null)}
+        />
+      ) : null}
     </>
   );
 };

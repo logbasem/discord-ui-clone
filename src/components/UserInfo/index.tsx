@@ -18,9 +18,16 @@ const UserInfo: React.FC = () => {
   return (
     <Container>
       <Profile>
-        <Avatar>
-          <img src={avatar} alt="GoldDragon" className="user-avatar" />
-        </Avatar>
+        <Tooltip
+          title="Profile"
+          placement="bottom"
+          arrow
+          classes={{ tooltip: classes.tooltip, arrow: classes.arrow, popper: classes.popper }}
+        >
+          <Avatar>
+            <img src={avatar} alt="GoldDragon" className="user-avatar" />
+          </Avatar>
+        </Tooltip>
         <UserData>
           <strong>GoldDragon</strong>
           <span>Online</span>
@@ -28,14 +35,29 @@ const UserInfo: React.FC = () => {
       </Profile>
 
       <Icons>
-        <Tooltip title={`${muteMic ? 'Unmute' : 'Mute'} Microphone`} placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+        <Tooltip
+          title={`${muteMic ? 'Unmute' : 'Mute'} Microphone`}
+          placement="bottom"
+          arrow
+          classes={{ tooltip: classes.tooltip, arrow: classes.arrow, popper: classes.popper }}
+        >
           <Icon onClick={handleMuteMic}>{muteMic ? <MicOffIcon /> : <MicIcon />}</Icon>
         </Tooltip>
-        <Tooltip title={`${muteAudio ? 'Unmute' : 'Mute'} Audio`} placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+        <Tooltip
+          title={`${muteAudio ? 'Unmute' : 'Mute'} Audio`}
+          placement="bottom"
+          arrow
+          classes={{ tooltip: classes.tooltip, arrow: classes.arrow, popper: classes.popper }}
+        >
           <Icon onClick={handleMuteAudio}>{muteAudio ? <VolumeOffIcon /> : <VolumeIcon />}</Icon>
         </Tooltip>
         <Icon>
-          <Tooltip title="User Settings" placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+          <Tooltip
+            title="Settings"
+            placement="bottom"
+            arrow
+            classes={{ tooltip: classes.tooltip, arrow: classes.arrow, popper: classes.popper }}
+          >
             <SettingsIcon />
           </Tooltip>
         </Icon>

@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
-import { Grid, Main, Sidebar, RightSidebarWrapper, TopBar, Footer, MessageInputContainer, CollapseButtonLeft, CollapseButtonRight } from './styles';
+import { Grid, Main, Sidebar, ServerRailWrapper, RightSidebarWrapper, TopBar, Footer, MessageInputContainer, CollapseButtonLeft,
+  CollapseButtonRight } from './styles';
 import { ChannelData, ChannelInfo, UserInfo, RightSidebar, LeftSidebar, MessageInput, Navigation, ServerList, ServerDropdown } from '../components';
 import PrivateMessagesPage from '../pages/PrivateMessages';
 import GroupChatsPage from '../pages/GroupChats';
+import UserProfilePopup from '../components/UserProfilePopup';
+import AddServerModal from '../components/AddServerModal';
 import { ServerData } from '../components/ServerList';
 import { privateUsers, UserProfileData } from '../data/userProfiles';
+import { mockUsers, MockUser } from '../data/mockUsers';
 import { ChatMessage } from '../components/ChannelData';
 import { Mention } from '../components/ChannelMessage';
 import leoronne from '~/assets/img/avatar.jpg';
@@ -17,6 +21,20 @@ import Code from '~/assets/svg/Code.svg';
 import NodeJS from '~/assets/svg/NodeJS.svg';
 import Pride from '~/assets/svg/Pride.svg';
 import Ronne from '~/assets/svg/Ronne.svg';
+
+// Chevron icon pointing left (for "collapse left sidebar")
+const ChevronLeft = () => (
+  <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+  </svg>
+);
+
+// Chevron icon pointing right (for "collapse right sidebar")
+const ChevronRight = () => (
+  <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+  </svg>
+);
 
 const fakeServer: ChatMessage[] = [
   { author: 'Leonardo Ronne', date: '06/21/2026', content: 'hi guys, how r u?', avatar: leoronne },
@@ -59,7 +77,10 @@ const fakeServer: ChatMessage[] = [
     hasMention: true,
     content: (
       <>
-        <Mention>@leoronne</Mention> 
+        <Mention>
+          @leoronne
+          {' '}
+        </Mention>
         good, just coding some rocketseat&#39;s challenges
       </>
     ),
@@ -70,20 +91,6 @@ const fakeServer: ChatMessage[] = [
   { author: 'Rocket', date: '06/21/2026', content: <>There are currently 4 online users and 17 offline!</>, isBot: true, avatar: user5 },
 ];
 
-// Chevron icon pointing left (for "collapse left sidebar")
-const ChevronLeft = () => (
-  <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
-  </svg>
-);
-
-// Chevron icon pointing right (for "collapse right sidebar")
-const ChevronRight = () => (
-  <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
-  </svg>
-);
-
 const Layout: React.FC = () => {
   const [activeNav, setActiveNav] = useState<string>('servers');
   const [selectedServer, setSelectedServer] = useState<string | null>('Ronne Dev Server');
@@ -91,26 +98,37 @@ const Layout: React.FC = () => {
   const [showServerDropdown, setShowServerDropdown] = useState<boolean>(false);
   const [showSeeAll, setShowSeeAll] = useState<boolean>(false);
   const [serverChatFeed, setServerChatFeed] = useState<ChatMessage[]>(fakeServer);
-
-  const servers: ServerData[] = [
+  const [servers, setServers] = useState<ServerData[]>([
     { name: 'Ronne Dev Server', logo: Ronne, color: '#cc78a3', hasNotifications: true, mentions: 40, isHome: true },
     { name: 'LGBTQIA+ Pride', logo: Pride, color: '#fff', hasNotifications: true, mentions: 11 },
     { name: 'RocketSeat', logo: RocketSeat, color: '#6633cc', hasNotifications: true, mentions: 40 },
     { name: 'Code', logo: Code, color: '#A598BE', hasNotifications: true, mentions: 7 },
     { name: 'Node.js', logo: NodeJS, color: '#83cd29', mentions: 32 },
-  ];
+  ]);
 
-  const recentServers = servers.slice(0, 5); // Show 3 most recent
+  const recentServers = servers.slice(0, 5);
 
   const [leftWidth, setLeftWidth] = useState<number>(240);
   const [rightWidth, setRightWidth] = useState<number>(240);
   const [selectedUser, setSelectedUser] = useState<UserProfileData | null>(null);
+  const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
+  const [dismissedUnreadByGroup, setDismissedUnreadByGroup] = useState<Record<string, boolean>>({});
+  const [groupSearchTerm, setGroupSearchTerm] = useState('');
+  const [pinnedGroupIds, setPinnedGroupIds] = useState<string[]>([]);
+  const [mutedGroupIds, setMutedGroupIds] = useState<Record<string, boolean>>({});
+  const [highlightedUser, setHighlightedUser] = useState<string | null>(null);
+  const [popupUser, setPopupUser] = useState<MockUser | null>(null);
+  const [popupPosition, setPopupPosition] = useState({ top: 120, left: 120 });
+  const [isAddServerModalOpen, setAddServerModalOpen] = useState(false);
   const leftCollapsed = leftWidth === 0;
   const rightCollapsed = rightWidth === 0;
-
+  
   const handleServerClick = (serverName: string) => {
     if (serverName === 'See All') {
       setShowSeeAll(true);
+      setShowServerDropdown(false);
+    } else if (serverName === 'Add New') {
+      setAddServerModalOpen(true);
       setShowServerDropdown(false);
     } else {
       setSelectedServer(serverName);
@@ -130,19 +148,21 @@ const Layout: React.FC = () => {
     }
   };
 
-  const onSendMessage = (message: string) => {
-    // log message to console
-    console.log('Sent message:', message);
+  const handleOpenPrivateMessage = (user: UserProfileData) => {
+    setSelectedUser(user);
+    setActiveNav('private');
+    setShowServerDropdown(false);
+    setShowSeeAll(false);
+  };
 
-    // create ChatData object and add to serverChatFeed
+  const handleSendMessage = (message: string) => {
     const newMessage: ChatMessage = {
-      author: 'golddragon', // hardcoded for now;
+      author: 'golddragon',
       date: 'Today',
       content: message,
       avatar: privateUsers.find((u) => u.id === 'golddragon')?.avatar || '',
     };
 
-    // if message contains @ sign and matches a username, set hasMention to true and include Mention component in content
     const mentionRegex = /@(\w+)/;
     const mentionMatch = message.match(mentionRegex);
 
@@ -156,7 +176,7 @@ const Layout: React.FC = () => {
               @
               {mentionedUser.username}
               {' '}
-            </Mention> 
+            </Mention>
             {message.replace(mentionRegex, '').trim()}
           </>
         );
@@ -164,6 +184,56 @@ const Layout: React.FC = () => {
     }
 
     setServerChatFeed((prev) => [...prev, newMessage]);
+  };
+
+  /** Clears unread badge for the tapped group chat (persisted until refresh). */
+  const handleGroupSelect = (groupId: string) => {
+    setSelectedGroupId(groupId);
+    setDismissedUnreadByGroup((prevState) => ({ ...prevState, [groupId]: true }));
+  };
+
+  const handleGroupBack = () => setSelectedGroupId(null);
+
+  const handleTogglePinGroup = (groupId: string): boolean => {
+    let wasAllowed = true;
+    setPinnedGroupIds((current) => {
+      if (current.includes(groupId)) {
+        return current.filter((id) => id !== groupId);
+      }
+      if (current.length >= 3) {
+        wasAllowed = false;
+        return current;
+      }
+      return [...current, groupId];
+    });
+    return wasAllowed;
+  };
+
+  const handleToggleMuteGroup = (groupId: string) => {
+    setMutedGroupIds((current) => ({ ...current, [groupId]: !current[groupId] }));
+  };
+
+  const handleServerAuthorClick = (
+    authorName: string,
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    const matched = mockUsers.find((user) => user.name === authorName);
+    const fallback: MockUser = {
+      id: `unknown-${authorName.toLowerCase().replace(/\s+/g, '-')}`,
+      name: authorName,
+      nickname: authorName,
+      pronouns: 'Unknown',
+      description: 'No profile details yet.',
+      mutualFriends: 0,
+      mutualServers: 0,
+      status: 'offline',
+    };
+    const targetUser = matched || fallback;
+    const rect = event.currentTarget.getBoundingClientRect();
+    const top = Math.min(Math.max(8, rect.top - 40), Math.max(8, window.innerHeight - 420 - 8));
+    const left = Math.min(rect.right + 12, Math.max(8, window.innerWidth - 300 - 8));
+    setPopupPosition({ top, left });
+    setPopupUser(targetUser);
   };
 
   const renderMainContent = () => {
@@ -179,7 +249,8 @@ const Layout: React.FC = () => {
             setShowSeeAll(false);
           }}
           selectedServer={selectedServer}
-          mostRecentServers={recentServers.map((s) => s.name) || ''}
+          allServers={servers}
+          onAddServerClick={() => setAddServerModalOpen(true)}
         />
       );
     }
@@ -189,19 +260,31 @@ const Layout: React.FC = () => {
       case 'private':
         return <PrivateMessagesPage onUserSelect={setSelectedUser} selectedUser={selectedUser} />;
       case 'groups':
-        return <GroupChatsPage />;
+        return (
+          <GroupChatsPage
+            selectedGroupId={selectedGroupId}
+            searchTerm={groupSearchTerm}
+            onSearchChange={setGroupSearchTerm}
+            onBack={handleGroupBack}
+            onHighlightUser={setHighlightedUser}
+          />
+        );
       case 'servers':
         if (selectedServer === 'Ronne Dev Server') {
           return (
             <>
               <ChannelInfo channelName={selectedChannel} />
-              <ChannelData channelName={selectedChannel} messages={serverChatFeed} />
+              <ChannelData
+                channelName={selectedChannel}
+                messages={serverChatFeed}
+                onAuthorClick={handleServerAuthorClick}
+              />
             </>
           );
         }
         return (
           <div style={{ padding: '20px' }}>
-            Channels for
+            Channels for 
             {selectedServer}
           </div>
         );
@@ -209,28 +292,59 @@ const Layout: React.FC = () => {
         return (
           <>
             <ChannelInfo channelName={selectedChannel} />
-            <ChannelData channelName={selectedChannel} messages={serverChatFeed} />
+            <ChannelData
+              channelName={selectedChannel}
+              messages={serverChatFeed}
+              onAuthorClick={handleServerAuthorClick}
+            />
           </>
         );
     }
   };
 
   return (
-    <Grid $leftWidth={leftWidth} $rightWidth={rightWidth}>
+    <Grid $leftWidth={leftWidth} $rightWidth={rightWidth} $serverWidth={activeNav === 'servers' ? 72 : 0}>
       <TopBar>
         <Navigation activeNav={activeNav} onChange={handleNavChange} />
-        {showServerDropdown && <ServerDropdown onServerClick={handleServerClick} mostRecentServers={recentServers} />}
+        {showServerDropdown && (
+          <ServerDropdown onServerClick={handleServerClick} mostRecentServers={recentServers} />
+        )}
       </TopBar>
+
+      {/* Server rail (servers page only) */}
+      <ServerRailWrapper $visible={activeNav === 'servers'}>
+        <ServerList
+          onServerClick={handleServerClick}
+          selectedServer={selectedServer}
+          allServers={servers}
+          onAddServerClick={() => setAddServerModalOpen(true)}
+        />
+      </ServerRailWrapper>
 
       {/* Left sidebar */}
       <Sidebar $width={leftWidth}>
-        <LeftSidebar width={leftWidth} setWidth={setLeftWidth} activeNav={activeNav} selectedChannel={selectedChannel} onChannelSelect={setSelectedChannel} />
+        <LeftSidebar 
+          width={leftWidth}
+          setWidth={setLeftWidth}
+          activeNav={activeNav} 
+          selectedChannel={selectedChannel} 
+          onChannelSelect={setSelectedChannel} 
+          selectedGroupId={selectedGroupId}
+          onGroupSelect={handleGroupSelect}
+          dismissedUnreadByGroup={dismissedUnreadByGroup}
+          groupSearchTerm={groupSearchTerm}
+          pinnedGroupIds={pinnedGroupIds}
+          mutedGroupIds={mutedGroupIds}
+          onTogglePin={handleTogglePinGroup}
+          onToggleMute={handleToggleMuteGroup}
+        />
       </Sidebar>
 
       {/* Collapse toggle: left sidebar */}
       <CollapseButtonLeft
         $collapsed={leftCollapsed}
         $leftWidth={leftWidth}
+        $serverOffset={activeNav === 'servers' ? 72 : 0}
         onClick={() => setLeftWidth((w) => (w === 0 ? 240 : 0))}
         title={leftCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         aria-label={leftCollapsed ? 'Expand left sidebar' : 'Collapse left sidebar'}
@@ -253,16 +367,41 @@ const Layout: React.FC = () => {
 
       {/* Right sidebar */}
       <RightSidebarWrapper $width={rightWidth}>
-        <RightSidebar width={rightWidth} setWidth={setRightWidth} activeNav={activeNav} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
+        <RightSidebar
+          width={rightWidth}
+          setWidth={setRightWidth}
+          activeNav={activeNav}
+          selectedUser={selectedUser}
+          selectedGroupId={selectedGroupId}
+          onOpenPrivateMessage={handleOpenPrivateMessage}
+          highlightedUserName={highlightedUser}
+        />
       </RightSidebarWrapper>
 
       <MessageInputContainer>
-        <MessageInput onSendMessage={onSendMessage} />
+        <MessageInput onSendMessage={handleSendMessage} />
       </MessageInputContainer>
 
       <Footer $leftCollapsed={leftCollapsed}>
         <UserInfo />
       </Footer>
+      {popupUser ? (
+        <UserProfilePopup
+          user={popupUser}
+          position={popupPosition}
+          onClose={() => setPopupUser(null)}
+          onMessageUser={() => setPopupUser(null)}
+        />
+      ) : null}
+      {isAddServerModalOpen ? (
+        <AddServerModal
+          onClose={() => setAddServerModalOpen(false)}
+          onCreate={(server) => {
+            setServers((current) => [...current, server]);
+            setSelectedServer(server.name);
+          }}
+        />
+      ) : null}
     </Grid>
   );
 };

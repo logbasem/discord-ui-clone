@@ -26,7 +26,12 @@ const ChannelList: React.FC<Props> = ({ selectedChannel = 'open-chat', onChannel
     <Container>
       <Category>
         <span>Text channels</span>
-        <Tooltip title="Add Channel" placement="bottom" arrow classes={{ tooltip: classes.tooltip }}>
+        <Tooltip
+          title="Add Channel"
+          placement="bottom"
+          arrow
+          classes={{ tooltip: classes.tooltip, arrow: classes.arrow, popper: classes.popper }}
+        >
           <AddCategoryIcon />
         </Tooltip>
       </Category>
