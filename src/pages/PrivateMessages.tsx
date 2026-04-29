@@ -87,7 +87,7 @@ const PrivateMessagesPage: React.FC<PrivateMessagesPageProps> = ({ selectedUser,
 
   // Automatically display the chat partner's profile in the right sidebar
   useEffect(() => {
-    const chatPartnerUser = privateUsers.find((user) => user.id === 'log');
+    const chatPartnerUser = privateUsers.find((user) => user.id === 'golddragon');
     if (chatPartnerUser && !selectedUser) {
       onUserSelect(chatPartnerUser);
     }
@@ -119,7 +119,7 @@ const PrivateMessagesPage: React.FC<PrivateMessagesPageProps> = ({ selectedUser,
     <>
       <Container>
         <Send size={14} color="var(--white)" />
-        <Title>Chat with Log</Title>
+        <Title>Chat with GoldDragon</Title>
       </Container>
       <PageContainer>
         <Messages>
