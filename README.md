@@ -42,6 +42,14 @@ This project is part of a UI Redesign Challenge through the University of Oklaho
 - [x] [TypeScript](https://www.typescriptlang.org/);
 - [x] [Styled Components](https://styled-components.com/).
 
+The source code for this project is contained in the `/src` folder, which is separated into:
+- `components`: main components, separated into folders where each folder has an index.tsx (logic) and styles.ts (styles)
+- `assets`: this contains images, assets used by React components
+- `styles`: contains general styling used for multiple components such as MaterialUI
+- `pages`: Group Chat and Private Messages pages
+- `Layout`: this is the component that controls what is actually rendered on the screen and the structure of that rendering
+- `App.tsx`: Layout + Styles passed to nodejs
+
 <br>
 
 ## Installation :wrench:
