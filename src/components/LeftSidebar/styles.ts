@@ -4,11 +4,13 @@ export const LeftSidebarStyled = styled.div<{ $width: number }>`
   grid-column: 1;
   grid-row: 2;
   width: ${({ $width }) => `${$width}px`};
-  background: #fafafa;
+
+  background: transparent;
   overflow-y: auto;
   overflow-x: visible;
   position: relative;
-  border-right: 1px solid #e0e0e0;
+  border-right: 1px solid transparent;
+  height: 100%;
   position: relative;
   z-index: 5;
   font-family: 'DM Sans', var(--font-family);
@@ -18,7 +20,7 @@ export const LeftSidebarStyled = styled.div<{ $width: number }>`
     grid-column: 1 / -1;
     width: 100%;
     border-right: none;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid transparent;
   }
 
   /* Hide on small tablets */
