@@ -198,6 +198,7 @@ const Layout: React.FC = () => {
             <Mention>
               @
               {mentionedUser.username} 
+              {' '}
             </Mention>
             {message.replace(mentionRegex, '').trim()}
           </>
