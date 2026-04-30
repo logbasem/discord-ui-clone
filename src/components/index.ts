@@ -14,3 +14,5 @@ export { default as ServerDropdown } from './ServerDropdown';
 export { default as UserProfile } from './UserProfile';
 export { default as PrivateChatList } from './PrivateChatList';
 export { default as Friends } from './FriendsButtons';
+export { default as VoiceJoinModal } from './VoiceJoinModal';
+export { default as VoiceConnectedDisplay } from './VoiceConnectedDisplay';

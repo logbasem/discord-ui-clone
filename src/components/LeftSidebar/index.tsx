@@ -6,6 +6,7 @@ import GroupChatList from '../GroupChatList';
 import CreateGroupModal from '../CreateGroupModal/index';
 import Friends from '../FriendsButtons/index';
 import LeftBarTitle from '../LeftBarTitle';
+import VoiceConnectedDisplay from '../VoiceConnectedDisplay';
 
 interface LeftSidebarProps {
   width: number;
@@ -21,6 +22,14 @@ interface LeftSidebarProps {
   mutedGroupIds?: Record<string, boolean>;
   onTogglePin?: (groupId: string) => boolean;
   onToggleMute?: (groupId: string) => void;
+  voiceChannels?: string[];
+  activeVoiceChannels?: string[];
+  onVoiceChannelSelect?: (channelName: string) => void;
+  onVoiceDisconnect?: () => void;
+  currentUser?: {
+    name: string;
+    avatar?: string;
+  };
 }
 
 const MIN_WIDTH = 150;
@@ -41,6 +50,11 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({
   mutedGroupIds,
   onTogglePin,
   onToggleMute,
+  voiceChannels = [],
+  activeVoiceChannels = [],
+  onVoiceChannelSelect,
+  onVoiceDisconnect,
+  currentUser,
 }) => {
   const cleanupRef = useRef<(() => void) | null>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
@@ -109,7 +123,22 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({
         return (
           <>
             <LeftBarTitle name="HCI Test Server" />
-            <ChannelList selectedChannel={selectedChannel} onChannelSelect={onChannelSelect} />
+            <ChannelList 
+              selectedChannel={selectedChannel} 
+              onChannelSelect={onChannelSelect}
+              voiceChannels={voiceChannels}
+              activeVoiceChannels={activeVoiceChannels}
+              onVoiceChannelSelect={onVoiceChannelSelect}
+              currentUser={currentUser}
+            />
+            {activeVoiceChannels.length > 0 && (
+            <div style={{ marginTop: 'auto' }}>
+              <VoiceConnectedDisplay
+                channelName={activeVoiceChannels[0]}
+                onDisconnect={onVoiceDisconnect || (() => undefined)} 
+              />
+            </div>
+            )}
           </>
         );
       case 'private':

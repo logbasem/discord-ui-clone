@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Grid, Main, Sidebar, ServerRailWrapper, RightSidebarWrapper, TopBar, Footer, MessageInputContainer, CollapseButtonLeft, CollapseButtonRight } from './styles';
-import { ChannelData, ChannelInfo, UserInfo, RightSidebar, LeftSidebar, MessageInput, Navigation, ServerList, ServerDropdown } from '../components';
+import { ChannelData, ChannelInfo, UserInfo, RightSidebar, LeftSidebar, MessageInput, Navigation, ServerList, ServerDropdown, VoiceJoinModal, VoiceConnectedDisplay } from '../components';
 import PrivateMessagesPage, { PrivateMessage } from '../pages/PrivateMessages';
 import GroupChatsPage from '../pages/GroupChats';
 import UserProfilePopup from '../components/UserProfilePopup';
@@ -135,6 +135,9 @@ const Layout: React.FC = () => {
   const [popupUser, setPopupUser] = useState<MockUser | null>(null);
   const [popupPosition, setPopupPosition] = useState({ top: 120, left: 120 });
   const [isAddServerModalOpen, setAddServerModalOpen] = useState(false);
+  const [voiceChannels, setVoiceChannels] = useState<string[]>(['Gaming']);
+  const [activeVoiceChannels, setActiveVoiceChannels] = useState<string[]>([]);
+  const [pendingVoiceChannel, setPendingVoiceChannel] = useState<string | null>(null);
   const leftCollapsed = leftWidth === 0;
   const rightCollapsed = rightWidth === 0;
 
@@ -339,6 +342,11 @@ const Layout: React.FC = () => {
           mutedGroupIds={mutedGroupIds}
           onTogglePin={handleTogglePinGroup}
           onToggleMute={handleToggleMuteGroup}
+          voiceChannels={voiceChannels}
+          activeVoiceChannels={activeVoiceChannels}
+          onVoiceChannelSelect={setPendingVoiceChannel}
+          onVoiceDisconnect={() => setActiveVoiceChannels([])}
+          currentUser={{ name: 'Log', avatar: user5 }}
         />
       </Sidebar>
 
@@ -385,6 +393,7 @@ const Layout: React.FC = () => {
       </MessageInputContainer>
 
       <Footer $leftCollapsed={leftCollapsed}>
+        
         <UserInfo />
       </Footer>
       {popupUser ? <UserProfilePopup user={popupUser} position={popupPosition} onClose={() => setPopupUser(null)} onMessageUser={() => setPopupUser(null)} /> : null}
@@ -397,6 +406,19 @@ const Layout: React.FC = () => {
           }}
         />
       ) : null}
+      {pendingVoiceChannel && (
+        <VoiceJoinModal
+          isOpen={!!pendingVoiceChannel}
+          channelName={pendingVoiceChannel}
+          onConfirm={() => {
+            if (pendingVoiceChannel) {
+              setActiveVoiceChannels((prev) => [...prev, pendingVoiceChannel]);
+              setPendingVoiceChannel(null);
+            }
+          }}
+          onCancel={() => setPendingVoiceChannel(null)}
+        />
+      )}
     </Grid>
   );
 };
