@@ -207,7 +207,6 @@ interface GroupChatsPageProps {
   onSearchChange: (value: string) => void;
   onBack: () => void;
   onHighlightUser: (name: string | null) => void;
-  onSendMessage: (message: string) => void;
   messages: ChatMessage[];
 }
 
@@ -232,7 +231,7 @@ const getInitials = (name: string) =>
     .slice(0, 2)
     .toUpperCase();
 
-const GroupChatsPage: React.FC<GroupChatsPageProps> = ({ selectedGroupId, searchTerm, onSearchChange, onBack, onHighlightUser, onSendMessage, messages }) => {
+const GroupChatsPage: React.FC<GroupChatsPageProps> = ({ selectedGroupId, searchTerm, onSearchChange, onBack, onHighlightUser, messages }) => {
   const messagesRef = useRef<HTMLDivElement>(null);
   const [popupUser, setPopupUser] = React.useState<MockUser | null>(null);
   const [popupPosition, setPopupPosition] = React.useState({ top: 120, left: 120 });
@@ -322,7 +321,7 @@ const GroupChatsPage: React.FC<GroupChatsPageProps> = ({ selectedGroupId, search
         </HeaderActions>
       </ChatHeader>
       <Messages ref={messagesRef}>
-        {combinedMessages.map((message, index) => (
+        {combinedMessages.map((message) => (
           <ChannelMessage
             key={`${selectedGroup.id}-${message.date}-${message.content}`}
             author={(

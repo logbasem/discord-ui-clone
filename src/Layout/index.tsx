@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Grid, Main, Sidebar, ServerRailWrapper, RightSidebarWrapper, TopBar, Footer, MessageInputContainer, CollapseButtonLeft, CollapseButtonRight } from './styles';
-import { ChannelData, ChannelInfo, UserInfo, RightSidebar, LeftSidebar, MessageInput, Navigation, ServerList, ServerDropdown, VoiceJoinModal, VoiceConnectedDisplay } from '../components';
+import { ChannelData, ChannelInfo, UserInfo, RightSidebar, LeftSidebar, MessageInput, Navigation, ServerList, ServerDropdown, VoiceJoinModal } from '../components';
 import PrivateMessagesPage, { PrivateMessage } from '../pages/PrivateMessages';
 import GroupChatsPage from '../pages/GroupChats';
 import UserProfilePopup from '../components/UserProfilePopup';
@@ -198,6 +198,7 @@ const Layout: React.FC = () => {
             <Mention>
               @
               {mentionedUser.username} 
+              {' '}
             </Mention>
             {message.replace(mentionRegex, '').trim()}
           </>
@@ -288,7 +289,7 @@ const Layout: React.FC = () => {
       case 'private':
         return <PrivateMessagesPage onUserSelect={setSelectedUser} selectedUser={selectedUser} messages={privateChatFeed} />;
       case 'groups':
-        return <GroupChatsPage selectedGroupId={selectedGroupId} searchTerm={groupSearchTerm} onSearchChange={setGroupSearchTerm} onBack={handleGroupBack} onHighlightUser={setHighlightedUser} onSendMessage={onSendMessage} messages={selectedGroupId ? groupChatFeeds[selectedGroupId] || [] : []} />;
+        return <GroupChatsPage selectedGroupId={selectedGroupId} searchTerm={groupSearchTerm} onSearchChange={setGroupSearchTerm} onBack={handleGroupBack} onHighlightUser={setHighlightedUser} messages={selectedGroupId ? groupChatFeeds[selectedGroupId] || [] : []} />;
       case 'servers':
         if (selectedServer === 'Ronne Dev Server') {
           return (
