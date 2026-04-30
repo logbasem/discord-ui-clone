@@ -6,16 +6,14 @@ import { ServerButtonWrapper } from '../ServerList/styles';
 
 interface ServerDropdownProps {
   onServerClick: (serverName: string) => void;
-  allServers: ServerData[];
+  favoriteServers: ServerData[];
 }
 
-const ServerDropdown: React.FC<ServerDropdownProps> = ({ onServerClick, allServers }) => {
-  const mostRecentServers = allServers.slice(0, 5);
-
+const ServerDropdown: React.FC<ServerDropdownProps> = ({ onServerClick, favoriteServers }) => {
   return (
     <DropdownContainer>
       <ServerDropdownItems>
-        {mostRecentServers?.map((server) => (
+        {favoriteServers?.map((server) => (
           <ServerButtonWrapper key={server.name}>
             <ServerButton
               isHome={server.isHome}
