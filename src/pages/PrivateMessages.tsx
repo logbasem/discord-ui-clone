@@ -42,7 +42,7 @@ const Messages = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 0;
-  overflow-y: auto;
+  overflow-y: scroll;
   padding-bottom: 10px;
   
   ::-webkit-scrollbar {
@@ -69,17 +69,6 @@ const ClickableAuthor = styled.button`
 
   &:hover {
     text-decoration: underline;
-  }
-`;
-
-const MessageWrapper = styled.div`
-  padding: 5px 0;
-  margin-bottom: 10px;
-  border-radius: 4px;
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.1); /* Similar to UserList hover effect */
   }
 `;
 
@@ -143,7 +132,7 @@ const PrivateMessagesPage: React.FC<PrivateMessagesPageProps> = ({ selectedUser,
             if (!user) return null;
 
             return (
-              <MessageWrapper key={`${item.userId}-${item.content}`} onClick={() => onUserSelect(user)}>
+              <div key={`${item.userId}-${item.content}`} onClick={() => onUserSelect(user)}>
                 <ChannelMessage
                   author={(
                     <ClickableAuthor type="button" onClick={() => onUserSelect(user)}>
@@ -154,7 +143,7 @@ const PrivateMessagesPage: React.FC<PrivateMessagesPageProps> = ({ selectedUser,
                   content={item.content}
                   avatar={user.avatar}
                 />
-              </MessageWrapper>
+              </div>
             );
           })}
         </Messages>
