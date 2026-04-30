@@ -207,7 +207,6 @@ interface GroupChatsPageProps {
   onSearchChange: (value: string) => void;
   onBack: () => void;
   onHighlightUser: (name: string | null) => void;
-  onSendMessage: (message: string) => void;
   messages: ChatMessage[];
 }
 
