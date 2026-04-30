@@ -56,6 +56,10 @@ You can install the application using `npm install` or `yarn install` on the roo
 
 To start the application interface just run `npm start` or `yarn start` on the root dir.
 
+### Alternate start command:
+If you encounter dependency issues you may need to use the following alternate command to run with legacy features:
+`NODE_OPTIONS=--openssl-legacy-provider npm start`
+
 
 ## License :memo:
 
@@ -63,7 +67,8 @@ To start the application interface just run `npm start` or `yarn start` on the r
 
 - **[MIT license](https://github.com/leoronne/discord-ui-clone/blob/master/LICENSE)**;
 
-Original Work by Leonardo Ronne
+Original Work by Leonardo Ronne, Modified by Landen Hollis, Jesse Jennings, Logan Murphy, ​
+Thrisha Duggisetty, Nicholas Vance.
 - Copyright 2020 © <a href="https://github.com/leoronne" target="_blank">Leonardo Ronne</a>.
 
 ##
