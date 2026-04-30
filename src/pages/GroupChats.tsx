@@ -303,10 +303,7 @@ const GroupChatsPage: React.FC<GroupChatsPageProps> = ({ selectedGroupId, search
           </BackButton>
           <GroupAvatar $bg={selectedGroup.avatarColor}>{getInitials(selectedGroup.name)}</GroupAvatar>
           <HeaderTitle>{selectedGroup.name}</HeaderTitle>
-          <HeaderMeta>
-            {selectedGroup.members}
-            {' members'}
-          </HeaderMeta>
+          <HeaderMeta>{`${selectedGroup.members} members`}</HeaderMeta>
         </HeaderLeft>
         <HeaderActions>
           <HeaderIconButton type="button" aria-label="Search group chat messages">
@@ -324,11 +321,7 @@ const GroupChatsPage: React.FC<GroupChatsPageProps> = ({ selectedGroupId, search
         {combinedMessages.map((message) => (
           <ChannelMessage
             key={`${selectedGroup.id}-${message.date}-${message.content}`}
-            author={(
-              <ClickableAuthor type="button" onClick={(event) => onAuthorClick(String(message.author), event)}>
-                {message.author}
-              </ClickableAuthor>
-            )}
+            author={<ClickableAuthor type="button" onClick={(event) => onAuthorClick(String(message.author), event)}>{message.author}</ClickableAuthor>}
             date={message.date}
             content={message.content}
             avatar={avatarByName[String(message.author)]}

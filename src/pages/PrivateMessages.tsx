@@ -99,7 +99,7 @@ const PrivateMessagesPage: React.FC<PrivateMessagesPageProps> = ({ selectedUser,
     if (chatPartnerUser && !selectedUser) {
       onUserSelect(chatPartnerUser);
     }
-  }, []);
+  }, [selectedUser, onUserSelect]);
 
   useEffect(() => {
     if (!selectedUser) {
@@ -126,7 +126,7 @@ const PrivateMessagesPage: React.FC<PrivateMessagesPageProps> = ({ selectedUser,
         <Send size={14} color="var(--white)" />
         <Title>Chat with GoldDragon</Title>
       </Container>
-      <PageContainer>
+      <PageContainer ref={popupRef}>
         <Messages>
           {messages.map((item) => {
             const user = privateUsers.find((entry) => entry.id === item.userId);

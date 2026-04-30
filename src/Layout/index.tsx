@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
 import { Grid, Main, Sidebar, ServerRailWrapper, RightSidebarWrapper, TopBar, Footer, MessageInputContainer, CollapseButtonLeft, CollapseButtonRight } from './styles';
-import { ChannelData, ChannelInfo, UserInfo, RightSidebar, LeftSidebar, MessageInput, Navigation, ServerList, ServerDropdown, VoiceJoinModal } from '../components';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { ChannelData, ChannelInfo, UserInfo, RightSidebar, LeftSidebar, MessageInput, Navigation, ServerList, ServerDropdown, VoiceJoinModal, VoiceConnectedDisplay } from '../components';
 import PrivateMessagesPage, { PrivateMessage } from '../pages/PrivateMessages';
 import GroupChatsPage from '../pages/GroupChats';
 import UserProfilePopup from '../components/UserProfilePopup';
@@ -16,9 +18,15 @@ import user4 from '~/assets/img/user4.jpg';
 import user5 from '~/assets/img/user5.jpg';
 
 import RocketSeat from '~/assets/svg/RocketSeat.svg';
+import Pokemon from '~/assets/svg/Pokémon.svg';
 import Code from '~/assets/svg/Code.svg';
+import TypeScript from '~/assets/svg/TypeScript.svg';
+import ReactJS from '~/assets/svg/ReactJS.svg';
 import NodeJS from '~/assets/svg/NodeJS.svg';
+import Mario from '~/assets/svg/Mario.svg';
 import Pride from '~/assets/svg/Pride.svg';
+import DC from '~/assets/svg/DC.svg';
+import CSS from '~/assets/svg/CSS.svg';
 import Ronne from '~/assets/svg/Ronne.svg';
 
 // Chevron icon pointing left (for "collapse left sidebar")
@@ -34,6 +42,101 @@ const ChevronRight = () => (
     <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
   </svg>
 );
+
+const SeeAllContainer = styled.div`
+  height: 100%;
+  overflow-y: auto;
+  background: var(--primary);
+  color: var(--white);
+  padding: 20px 24px;
+`;
+
+const SeeAllHeader = styled.div`
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: linear-gradient(var(--primary), var(--primary));
+  padding-bottom: 12px;
+`;
+
+const SeeAllTitle = styled.h2`
+  margin: 0 0 10px;
+  font-size: 20px;
+  font-weight: 700;
+`;
+
+const SeeAllSearch = styled.input`
+  width: 100%;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid var(--quinary);
+  background: var(--secondary);
+  color: var(--white);
+  padding: 0 12px;
+  outline: none;
+
+  &::placeholder {
+    color: var(--gray);
+  }
+`;
+
+const ServerResults = styled.div`
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+`;
+
+const ServerResultItem = styled.button`
+  width: 100%;
+  border: 1px solid var(--quinary);
+  border-radius: 10px;
+  background: var(--secondary);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  cursor: pointer;
+  text-align: left;
+
+  &:hover {
+    background: var(--quinary);
+  }
+`;
+
+const ServerLogo = styled.img`
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+`;
+
+const ServerLogoFallback = styled.div<{ $color: string }>`
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: ${({ $color }) => $color};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+`;
+
+const ServerResultMeta = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+`;
+
+const ServerResultName = styled.span`
+  font-size: 15px;
+  font-weight: 600;
+`;
+
+const ServerResultSub = styled.span`
+  font-size: 12px;
+  color: var(--gray);
+`;
 
 const fakeServer: ChatMessage[] = [
   { author: 'Leonardo Ronne', date: '06/21/2026', content: 'hi guys, how r u?', avatar: leoronne },
@@ -103,25 +206,32 @@ const fakePrivateMessages: PrivateMessage[] = [
   { userId: 'log', content: 'Probably green', date: '10/02/2026 - 10:12 PM' },
 ];
 
+const allServers: ServerData[] = [
+  { name: 'Ronne Dev Server', logo: Ronne, color: '#cc78a3', hasNotifications: true, mentions: 40, isHome: true },
+  { name: 'LGBTQIA+ Pride', logo: Pride, color: '#fff', hasNotifications: true, mentions: 11 },
+  { name: 'RocketSeat', logo: RocketSeat, color: '#6633cc', hasNotifications: true, mentions: 40 },
+  { name: 'Code', logo: Code, color: '#A598BE', hasNotifications: true, mentions: 7 },
+  { name: 'Node.js', logo: NodeJS, color: '#83cd29', mentions: 32 },
+  { name: 'Pokémon', logo: Pokemon, color: '#f9cb3a', hasNotifications: true, mentions: 4 },
+  { name: 'TypeScript', logo: TypeScript, color: '#3178c6' },
+  { name: 'ReactJS', logo: ReactJS, color: '#61dafb' },
+  { name: 'Mario', logo: Mario, color: '#e52521' },
+  { name: 'DC', logo: DC, color: '#0476f2' },
+  { name: 'CSS', logo: CSS, color: '#264de4' },
+];
+
 const Layout: React.FC = () => {
   const [activeNav, setActiveNav] = useState<string>('servers');
   const [selectedServer, setSelectedServer] = useState<string | null>('Ronne Dev Server');
   const [selectedChannel, setSelectedChannel] = useState<string>('open-chat');
   const [showServerDropdown, setShowServerDropdown] = useState<boolean>(false);
   const [showSeeAll, setShowSeeAll] = useState<boolean>(false);
+  const [seeAllSearchTerm, setSeeAllSearchTerm] = useState('');
   const [serverChatFeed, setServerChatFeed] = useState<ChatMessage[]>(fakeServer);
   const [privateChatFeed, setPrivateChatFeed] = useState<PrivateMessage[]>(fakePrivateMessages);
   const [groupChatFeeds, setGroupChatFeeds] = useState<Record<string, ChatMessage[]>>({});
 
-  const [servers, setServers] = useState<ServerData[]>([
-    { name: 'Ronne Dev Server', logo: Ronne, color: '#cc78a3', hasNotifications: true, mentions: 40, isHome: true },
-    { name: 'LGBTQIA+ Pride', logo: Pride, color: '#fff', hasNotifications: true, mentions: 11 },
-    { name: 'RocketSeat', logo: RocketSeat, color: '#6633cc', hasNotifications: true, mentions: 40 },
-    { name: 'Code', logo: Code, color: '#A598BE', hasNotifications: true, mentions: 7 },
-    { name: 'Node.js', logo: NodeJS, color: '#83cd29', mentions: 32 },
-  ]);
-
-  const recentServers = servers.slice(0, 5);
+  const [servers, setServers] = useState<ServerData[]>(allServers);
 
   const [leftWidth, setLeftWidth] = useState<number>(240);
   const [rightWidth, setRightWidth] = useState<number>(240);
@@ -135,6 +245,7 @@ const Layout: React.FC = () => {
   const [popupUser, setPopupUser] = useState<MockUser | null>(null);
   const [popupPosition, setPopupPosition] = useState({ top: 120, left: 120 });
   const [isAddServerModalOpen, setAddServerModalOpen] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [voiceChannels, setVoiceChannels] = useState<string[]>(['Gaming']);
   const [activeVoiceChannels, setActiveVoiceChannels] = useState<string[]>([]);
   const [pendingVoiceChannel, setPendingVoiceChannel] = useState<string | null>(null);
@@ -174,6 +285,7 @@ const Layout: React.FC = () => {
   };
 
   const onSendMessage = (message: string) => {
+    // eslint-disable-next-line no-console
     console.log('Sent message:', message);
 
     const newMessage: ChatMessage | PrivateMessage = {
@@ -268,19 +380,45 @@ const Layout: React.FC = () => {
   const renderMainContent = () => {
     // If see-all is open, show server list
     if (showSeeAll) {
+      const normalizedSearch = seeAllSearchTerm.trim().toLowerCase();
+      const filteredServers = servers.filter((server) => server.name.toLowerCase().includes(normalizedSearch));
+
       return (
-        <ServerList
-          onServerClick={(name) => {
-            setSelectedServer(name);
-            if (activeNav !== 'servers') {
-              setActiveNav('servers');
-            }
-            setShowSeeAll(false);
-          }}
-          selectedServer={selectedServer}
-          allServers={servers}
-          onAddServerClick={() => setAddServerModalOpen(true)}
-        />
+        <SeeAllContainer>
+          <SeeAllHeader>
+            <SeeAllTitle>All Servers</SeeAllTitle>
+            <SeeAllSearch
+              type="text"
+              placeholder="Search servers..."
+              value={seeAllSearchTerm}
+              onChange={(event) => setSeeAllSearchTerm(event.target.value)}
+            />
+          </SeeAllHeader>
+
+          <ServerResults>
+            {filteredServers.map((server) => (
+              <ServerResultItem
+                key={server.name}
+                onClick={() => {
+                  setSelectedServer(server.name);
+                  if (activeNav !== 'servers') {
+                    setActiveNav('servers');
+                  }
+                  setShowSeeAll(false);
+                }}
+              >
+                {server.logo ? <ServerLogo src={server.logo} alt={server.name} /> : <ServerLogoFallback $color={server.color}>{server.name[0]?.toUpperCase() || '?'}</ServerLogoFallback>}
+                <ServerResultMeta>
+                  <ServerResultName>{server.name}</ServerResultName>
+                  <ServerResultSub>
+                    {server.mentions ? `${server.mentions} mentions` : 'No new mentions'}
+                  </ServerResultSub>
+                </ServerResultMeta>
+              </ServerResultItem>
+            ))}
+            {filteredServers.length === 0 ? <ServerResultSub>No servers found.</ServerResultSub> : null}
+          </ServerResults>
+        </SeeAllContainer>
       );
     }
 
@@ -319,7 +457,7 @@ const Layout: React.FC = () => {
     <Grid $leftWidth={leftWidth} $rightWidth={rightWidth} $serverWidth={activeNav === 'servers' ? 72 : 0}>
       <TopBar>
         <Navigation activeNav={activeNav} onChange={handleNavChange} />
-        {showServerDropdown && <ServerDropdown onServerClick={handleServerClick} mostRecentServers={recentServers} />}
+        {showServerDropdown && <ServerDropdown onServerClick={handleServerClick} allServers={servers} />}
       </TopBar>
 
       {/* Server rail (servers page only) */}
