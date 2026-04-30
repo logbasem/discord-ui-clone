@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { Send } from 'styled-icons/material';
 import { privateUsers, UserProfileData } from '../data/userProfiles';
 import ChannelMessage from '../components/ChannelMessage';
-import { ChatMessage } from '../components/ChannelData';
 
 const PageContainer = styled.div`
   display: flex;
@@ -14,8 +13,6 @@ const PageContainer = styled.div`
   background-color: var(--primary);
   color: var(--white);
   position: relative;
-  height: 100%;
-  width: 100%;
 `;
 
 const Container = styled.div`
@@ -38,15 +35,14 @@ export const Title = styled.h1`
   font-size: 14px;
   font-weight: 500;
   color: var(--white);
-  margin: 0;
 `;
 
 const Messages = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
   min-height: 0;
+  overflow-y: auto;
   padding-bottom: 10px;
   
   ::-webkit-scrollbar {
@@ -61,10 +57,37 @@ const Messages = styled.div`
   }
 `;
 
+const ClickableAuthor = styled.button`
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--white);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const MessageWrapper = styled.div`
+  padding: 5px 0;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Similar to UserList hover effect */
+  }
+`;
+
 export interface PrivateMessage {
   userId: string;
   content: React.ReactNode;
   date: string;
+  avatar?: string;
 }
 
 interface PrivateMessagesPageProps {
@@ -74,7 +97,31 @@ interface PrivateMessagesPageProps {
 }
 
 const PrivateMessagesPage: React.FC<PrivateMessagesPageProps> = ({ selectedUser, onUserSelect, messages }) => {
+  const popupRef = useRef<HTMLDivElement>(null);
   const messagesRef = useRef<HTMLDivElement>(null);
+
+  // Automatically display the chat partner's profile in the right sidebar
+  useEffect(() => {
+    const chatPartnerUser = privateUsers.find((user) => user.id === 'golddragon');
+    if (chatPartnerUser && !selectedUser) {
+      onUserSelect(chatPartnerUser);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!selectedUser) {
+      return undefined;
+    }
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+        onUserSelect(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [selectedUser, onUserSelect]);
 
   useEffect(() => {
     const div = messagesRef.current;
@@ -83,39 +130,33 @@ const PrivateMessagesPage: React.FC<PrivateMessagesPageProps> = ({ selectedUser,
     }
   }, [messages]);
 
-  // Convert PrivateMessage[] to ChatMessage[]
-  const chatMessages: ChatMessage[] = messages.map((msg) => {
-    const user = privateUsers.find((u) => u.id === msg.userId);
-    return {
-      author: user?.username || msg.userId,
-      date: msg.date,
-      content: msg.content,
-      avatar: user?.avatar,
-    };
-  });
-
   return (
     <>
       <Container>
         <Send size={14} color="var(--white)" />
-        <Title>
-          Chat with 
-          {selectedUser?.username || 'User'}
-        </Title>
+        <Title>Chat with GoldDragon</Title>
       </Container>
       <PageContainer>
-        <Messages ref={messagesRef}>
-          {chatMessages.map((message) => (
-            <ChannelMessage
-              key={`${message.author}-${message.date}-${typeof message.content === 'string' ? message.content : 'mention'}`}
-              author={message.author}
-              date={message.date}
-              content={message.content}
-              hasMention={message.hasMention}
-              isBot={message.isBot}
-              avatar={message.avatar}
-            />
-          ))}
+        <Messages>
+          {messages.map((item) => {
+            const user = privateUsers.find((entry) => entry.id === item.userId);
+            if (!user) return null;
+
+            return (
+              <MessageWrapper key={`${item.userId}-${item.content}`} onClick={() => onUserSelect(user)}>
+                <ChannelMessage
+                  author={(
+                    <ClickableAuthor type="button" onClick={() => onUserSelect(user)}>
+                      {user.username}
+                    </ClickableAuthor>
+                  )}
+                  date={item.date}
+                  content={item.content}
+                  avatar={user.avatar}
+                />
+              </MessageWrapper>
+            );
+          })}
         </Messages>
       </PageContainer>
     </>
