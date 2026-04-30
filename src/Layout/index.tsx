@@ -258,6 +258,7 @@ const Layout: React.FC = () => {
   const handleServerClick = (serverName: string) => {
     if (serverName === 'See All') {
       setShowSeeAll(true);
+      setSelectedServer(null);
       setShowServerDropdown(false);
     } else if (serverName === 'Add New') {
       setAddServerModalOpen(true);
