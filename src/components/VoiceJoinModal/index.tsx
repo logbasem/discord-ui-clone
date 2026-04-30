@@ -113,6 +113,7 @@ const VoiceJoinModal: React.FC<Props> = ({ isOpen, channelName, onConfirm, onCan
         </ModalHeader>
         <Message>
           Are you ready to join 
+          {' '}
           <strong>{channelName}</strong>
           ?
         </Message>
