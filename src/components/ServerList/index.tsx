@@ -44,7 +44,7 @@ const ServerList: React.FC<Props> = ({
       <HomeButton
         data-tooltip="Home"
         aria-label="Home"
-        onClick={() => onServerClick('Ronne Dev Server')}
+        onClick={() => onServerClick('home')}
         $active={selectedServer === 'Ronne Dev Server'}
       >
         {selectedServer === 'Ronne Dev Server' ? <ActivePill /> : null}

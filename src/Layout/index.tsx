@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Grid, Main, Sidebar, ServerRailWrapper, RightSidebarWrapper, TopBar, Footer, MessageInputContainer, CollapseButtonLeft, CollapseButtonRight } from './styles';
+import { Grid, Main, Sidebar, ServerRailWrapper, RightSidebarWrapper, TopBar, Footer, MessageInputContainer, CollapseButtonLeft, CollapseButtonRight,
+ServerButtonWrapper, FavoritesButton, Separator
+ } from './styles';
+import ServerButton from '../components/ServerButton';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { ChannelData, ChannelInfo, UserInfo, RightSidebar, LeftSidebar, MessageInput, Navigation, ServerList, ServerDropdown, VoiceJoinModal, VoiceConnectedDisplay } from '../components';
 import PrivateMessagesPage, { PrivateMessage } from '../pages/PrivateMessages';
@@ -255,6 +258,7 @@ const Layout: React.FC = () => {
   const handleServerClick = (serverName: string) => {
     if (serverName === 'See All') {
       setShowSeeAll(true);
+      setSelectedServer(null);
       setShowServerDropdown(false);
     } else if (serverName === 'Add New') {
       setAddServerModalOpen(true);
@@ -377,12 +381,16 @@ const Layout: React.FC = () => {
     setPopupUser(targetUser);
   };
 
+  const normalizedSearch = seeAllSearchTerm.trim().toLowerCase();
+  const filteredServers = servers.filter((server) => server.name.toLowerCase().includes(normalizedSearch));
+  const favoriteNames = new Set(['Ronne Dev Server', 'RocketSeat', 'LGBTQIA+ Pride', 'Code', 'Node.js']);
+  
+  const favoriteServers = filteredServers.filter((s) => favoriteNames.has(s.name));
+  const otherServers = filteredServers.filter((s) => !favoriteNames.has(s.name));
+
   const renderMainContent = () => {
     // If see-all is open, show server list
     if (showSeeAll) {
-      const normalizedSearch = seeAllSearchTerm.trim().toLowerCase();
-      const filteredServers = servers.filter((server) => server.name.toLowerCase().includes(normalizedSearch));
-
       return (
         <SeeAllContainer>
           <SeeAllHeader>
@@ -395,8 +403,28 @@ const Layout: React.FC = () => {
             />
           </SeeAllHeader>
 
+          <div style={{ fontWeight: 'bold', color: 'white', paddingBottom: '8px' }}>Favorites</div>
+          {favoriteServers.map((server) => (
+            <ServerButtonWrapper key={server.name}>
+              <ServerButton
+                isHome={server.isHome}
+                hasNotifications={server.hasNotifications}
+                mentions={server.mentions}
+                color={server.color}
+                logo={server.logo}
+                name={server.name}
+                onClick={() => handleServerClick(server.name)}
+                selected={selectedServer === server.name}
+              />
+            </ServerButtonWrapper>
+          ))}
+
+          <FavoritesButton>Edit Favorites</FavoritesButton>
+
+          <Separator />
+
           <ServerResults>
-            {filteredServers.map((server) => (
+            {otherServers.map((server) => (
               <ServerResultItem
                 key={server.name}
                 onClick={() => {
@@ -457,7 +485,7 @@ const Layout: React.FC = () => {
     <Grid $leftWidth={leftWidth} $rightWidth={rightWidth} $serverWidth={activeNav === 'servers' ? 72 : 0}>
       <TopBar>
         <Navigation activeNav={activeNav} onChange={handleNavChange} />
-        {showServerDropdown && <ServerDropdown onServerClick={handleServerClick} allServers={servers} />}
+        {showServerDropdown && <ServerDropdown onServerClick={handleServerClick} favoriteServers={favoriteServers} />}
       </TopBar>
 
       {/* Server rail (servers page only) */}
