@@ -89,6 +89,10 @@ const PrivateMessagesPage: React.FC<PrivateMessagesPageProps> = ({ selectedUser,
   const popupRef = useRef<HTMLDivElement>(null);
   const messagesRef = useRef<HTMLDivElement>(null);
 
+  const scrollToBottom = () => {
+    messagesRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   // Automatically display the chat partner's profile in the right sidebar
   useEffect(() => {
     const chatPartnerUser = privateUsers.find((user) => user.id === 'golddragon');
@@ -113,10 +117,7 @@ const PrivateMessagesPage: React.FC<PrivateMessagesPageProps> = ({ selectedUser,
   }, [selectedUser, onUserSelect]);
 
   useEffect(() => {
-    const div = messagesRef.current;
-    if (div) {
-      div.scrollTop = div.scrollHeight;
-    }
+    scrollToBottom();
   }, [messages]);
 
   return (
@@ -146,6 +147,7 @@ const PrivateMessagesPage: React.FC<PrivateMessagesPageProps> = ({ selectedUser,
               </div>
             );
           })}
+          <div ref={messagesRef} />
         </Messages>
       </PageContainer>
     </>
