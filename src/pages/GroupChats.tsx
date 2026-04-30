@@ -232,7 +232,7 @@ const getInitials = (name: string) =>
     .slice(0, 2)
     .toUpperCase();
 
-const GroupChatsPage: React.FC<GroupChatsPageProps> = ({ selectedGroupId, searchTerm, onSearchChange, onBack, onHighlightUser, onSendMessage, messages }) => {
+const GroupChatsPage: React.FC<GroupChatsPageProps> = ({ selectedGroupId, searchTerm, onSearchChange, onBack, onHighlightUser, messages }) => {
   const messagesRef = useRef<HTMLDivElement>(null);
   const [popupUser, setPopupUser] = React.useState<MockUser | null>(null);
   const [popupPosition, setPopupPosition] = React.useState({ top: 120, left: 120 });
@@ -304,10 +304,7 @@ const GroupChatsPage: React.FC<GroupChatsPageProps> = ({ selectedGroupId, search
           </BackButton>
           <GroupAvatar $bg={selectedGroup.avatarColor}>{getInitials(selectedGroup.name)}</GroupAvatar>
           <HeaderTitle>{selectedGroup.name}</HeaderTitle>
-          <HeaderMeta>
-            {selectedGroup.members}
-            {' members'}
-          </HeaderMeta>
+          <HeaderMeta>{`${selectedGroup.members} members`}</HeaderMeta>
         </HeaderLeft>
         <HeaderActions>
           <HeaderIconButton type="button" aria-label="Search group chat messages">
@@ -322,14 +319,10 @@ const GroupChatsPage: React.FC<GroupChatsPageProps> = ({ selectedGroupId, search
         </HeaderActions>
       </ChatHeader>
       <Messages ref={messagesRef}>
-        {combinedMessages.map((message, index) => (
+        {combinedMessages.map((message) => (
           <ChannelMessage
             key={`${selectedGroup.id}-${message.date}-${message.content}`}
-            author={(
-              <ClickableAuthor type="button" onClick={(event) => onAuthorClick(String(message.author), event)}>
-                {message.author}
-              </ClickableAuthor>
-            )}
+            author={<ClickableAuthor type="button" onClick={(event) => onAuthorClick(String(message.author), event)}>{message.author}</ClickableAuthor>}
             date={message.date}
             content={message.content}
             avatar={avatarByName[String(message.author)]}

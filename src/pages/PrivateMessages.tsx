@@ -73,7 +73,7 @@ interface PrivateMessagesPageProps {
   messages: PrivateMessage[];
 }
 
-const PrivateMessagesPage: React.FC<PrivateMessagesPageProps> = ({ selectedUser, onUserSelect, messages }) => {
+const PrivateMessagesPage: React.FC<PrivateMessagesPageProps> = ({ selectedUser, messages }) => {
   const messagesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
