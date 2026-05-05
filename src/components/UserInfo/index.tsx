@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Tooltip } from '@material-ui/core';
 
-import avatar from '~/assets/img/avatar.jpg';
+import avatar from '~/assets/img/user5.jpg';
 
 import { useStyles } from '../../styles/MaterialUI';
 import { Container, Profile, Avatar, UserData, Icons, Icon, MicIcon, MicOffIcon, VolumeIcon, VolumeOffIcon, SettingsIcon } from './styles';
@@ -25,11 +25,11 @@ const UserInfo: React.FC = () => {
           classes={{ tooltip: classes.tooltip, arrow: classes.arrow, popper: classes.popper }}
         >
           <Avatar>
-            <img src={avatar} alt="GoldDragon" className="user-avatar" />
+            <img src={avatar} alt="Log" className="user-avatar" />
           </Avatar>
         </Tooltip>
         <UserData>
-          <strong>GoldDragon</strong>
+          <strong>Log</strong>
           <span>Online</span>
         </UserData>
       </Profile>
